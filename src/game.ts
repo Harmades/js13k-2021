@@ -1,11 +1,14 @@
 import { Settings } from "./settings";
+import * as Renderer from "./renderer";
+import * as Player from "./player";
+import * as Platform from "./platform";
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
 let lastRender = lastTick;
 
-export function loop(tFrame: number, update: (delta: number) => void, render: () => void) {
-    window.requestAnimationFrame(t => loop(t, update, render));
+export function loop(tFrame: number) {
+    window.requestAnimationFrame(t => loop(t));
     var nextTick = lastTick + tickLength;
     var numTicks = 0;
 
@@ -21,4 +24,13 @@ export function loop(tFrame: number, update: (delta: number) => void, render: ()
 
     render();
     lastRender = tFrame;
+}
+
+export function update(delta: number) {
+    Player.update(delta);
+    Platform.update(delta);
+}
+
+export function render() {
+    Renderer.render();
 }
