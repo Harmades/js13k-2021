@@ -3,13 +3,14 @@ import { Settings } from "./settings";
 import { Vector } from "./vector";
 import * as Player from "./player"
 import * as Platform from "./platform";
+import Atlas from '../asset/atlas.png';
 
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 canvas.width = Settings.width;
 canvas.height = Settings.height;
 const context = canvas.getContext("2d") as CanvasRenderingContext2D;
 const atlas = new Image(96, 96);
-atlas.src = "asset/atlas.png";
+atlas.src = Atlas;
 
 export function drawImage(image: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number) {
     context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
