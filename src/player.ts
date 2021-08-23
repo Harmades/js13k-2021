@@ -1,3 +1,4 @@
+import { applyGravity } from "./gravity";
 import { input } from "./input";
 import { Rectangle } from "./rectangle";
 import { drawAtlas } from "./renderer";
@@ -35,4 +36,5 @@ export function update(delta: number) {
 
     multiply(translation, speed);
     add(player, translation);
+    // applyGravity(player);
 }

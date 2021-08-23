@@ -7,5 +7,5 @@ export const Settings = {
     tileSize: 8,
 
     engineTimeResolution: 1,
-    gravity: 1
+    gravity: 0.1
 }

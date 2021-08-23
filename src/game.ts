@@ -2,6 +2,8 @@ import { Settings } from "./settings";
 import * as Renderer from "./renderer";
 import * as Player from "./player";
 import * as Platform from "./platform";
+import * as Physics from "./physics";
+import * as Input from "./input";
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
@@ -29,6 +31,8 @@ export function loop(tFrame: number) {
 export function update(delta: number) {
     Player.update(delta);
     Platform.update(delta);
+    Physics.update(Player.player, Platform.platforms);
+    Input.update(delta);
 }
 
 export function render() {

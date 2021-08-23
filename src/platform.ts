@@ -1,23 +1,27 @@
-import { player } from "./player";
-import { collides, Rectangle } from "./rectangle";
+import { Rectangle } from "./rectangle";
 import { drawRect } from "./renderer";
 
 export type Platform = Rectangle & {
     collision: boolean
 }
 
-export const platforms: Platform[] = [{
-    x: 100,
-    y: 50,
-    width: 50,
-    height: 50,
-    collision: false
-}];
+export const platforms: Platform[] = [
+    {
+        x: 20,
+        y: 100,
+        width: 50,
+        height: 20,
+        collision: false
+    },
+    {
+        x: 100,
+        y: 50,
+        width: 50,
+        height: 50,
+        collision: false
+    }];
 
 export function update(delta: number) {
-    for (const platform of platforms) {
-        platform.collision = collides(player, platform);
-    }
 }
 
 export function render() {
