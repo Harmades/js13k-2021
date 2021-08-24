@@ -1,5 +1,5 @@
 import { Platform } from "./platform";
-import { Player } from "./player";
+import { collide, Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { add, Vector } from "./vector";
 
@@ -26,6 +26,7 @@ export function update(player: Player, platforms: Platform[]) {
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
+            collide();
         } else {
             platform.collision = false;
         }
@@ -55,7 +56,7 @@ function yProject(rectangle: Rectangle): Vector {
 }
 
 function getOverlap(s1: Vector, s2: Vector): Overlap | null {
-    if (s1.y < s2.x || s2.y < s1.x) return null;
+    if (s1.y <= s2.x || s2.y <= s1.x) return null;
     return {
         x: Math.max(s1.x, s2.x),
         y: Math.min(s1.y, s2.y)

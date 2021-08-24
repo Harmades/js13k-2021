@@ -17,8 +17,12 @@ export function drawImage(image: HTMLImageElement, sx: number, sy: number, sw: n
 }
 
 export function drawRect(rectangle: Rectangle, color: string) {
+    context.save();
+    context.translate(0.5, 0.5);
+    context.lineWidth = 1;
     context.strokeStyle = color;
     context.strokeRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    context.restore();
 }
 
 export function drawAtlas(source: Vector, destination: Vector) {
