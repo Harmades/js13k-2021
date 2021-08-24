@@ -10,5 +10,5 @@ export const Settings = {
     gravity: 0.1,
 
     playerSpeedX: 50,
-    playerSpeedY: 50,
+    playerSpeedY: 75,
 }

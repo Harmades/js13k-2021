@@ -1,6 +1,6 @@
 import { input } from "./input";
 import { Rectangle } from "./rectangle";
-import { drawAtlas } from "./renderer";
+import { drawAsset } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 
@@ -11,19 +11,15 @@ export type PlayerState = "idle" | "running" | "airborne"
 export const player: Player = {
     x: 20,
     y: 30,
-    width: 8,
-    height: 8,
+    width: 15,
+    height: 16,
     speed: { x: 0, y: 0 },
     state: "idle"
 }
 
-const atlasPosition: Vector = {
-    x: 0,
-    y: 16
-};
-
 export function render() {
-    drawAtlas(atlasPosition, player);
+    // drawAtlas(atlasPosition, player);
+    drawAsset("player", player);
 }
 
 export function update(delta: number) {

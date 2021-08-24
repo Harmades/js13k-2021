@@ -1,5 +1,5 @@
 import { Rectangle } from "./rectangle";
-import { drawRect } from "./renderer";
+import { drawAsset, drawRect } from "./renderer";
 
 export type Platform = Rectangle & {
     collision: boolean
@@ -7,17 +7,17 @@ export type Platform = Rectangle & {
 
 export const platforms: Platform[] = [
     {
-        x: 20,
-        y: 100,
-        width: 50,
-        height: 20,
+        x: 16,
+        y: 96,
+        width: 16 * 3,
+        height: 16,
         collision: false
     },
     {
-        x: 100,
-        y: 50,
-        width: 50,
-        height: 50,
+        x: 96,
+        y: 80,
+        width: 16 * 5,
+        height: 16,
         collision: false
     }];
 
@@ -26,7 +26,8 @@ export function update(delta: number) {
 
 export function render() {
     for (const platform of platforms) {
-        const color = platform.collision ? "#FF0000" : "#000000";
-        drawRect(platform, color);
+        // const color = platform.collision ? "#FF0000" : "#000000";
+        // drawRect(platform, color);
+        drawAsset("platform", platform);
     }
 }
