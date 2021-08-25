@@ -7,8 +7,9 @@ export const Settings = {
     tileSize: 8,
 
     engineTimeResolution: 1,
-    gravity: 0.1,
+    gravity: 500,
 
     playerSpeedX: 50,
-    playerSpeedY: 75,
+    playerSpeedY: 200,
+    playerCoyoteFrames: 250,
 }

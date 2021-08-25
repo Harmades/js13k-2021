@@ -14,19 +14,23 @@ Courir, charger, transformer
 
 ## Combinaison
 
-Charger (COW) -> transformer -> sauter = mega saut
+PE: Charger (COW) -> transformer -> sauter = mega saut
 
 Sauter (BOY) -> transformer = slam
 
 # Levels
 
-Plusieurs (?) levels a finir.
+Level unique.
+
+Ennemis: boucher humain, robot boucher, robot bouclier, mur fissuré, pics, scies circulaires 
+
+PE: caisse en bois, tourelle qui vise avec un laser, boss
 
 ## Elements avec interaction
 
 * Mur fissuré -> charger en COW
-* Sol fissuré -> slam
-* Laser -> crame le joueur mais laisse passer les tirs
+* PE: Sol fissuré -> slam
+
 
 ## NPC
 

@@ -26,7 +26,7 @@ export function update(player: Player, platforms: Platform[]) {
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
-            collide();
+            collide(translationVector);
         } else {
             platform.collision = false;
         }
