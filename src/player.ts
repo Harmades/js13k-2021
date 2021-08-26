@@ -15,8 +15,12 @@ export type PlayerState = "idle" | "running" | "coyote" | "airborne"
 
 let currentCoyoteFrame = 0;
 let currentGravity = 0;
-let idleSprite = loadImage(Charac_Cowboy);
-let walkSprite = loadImage(Charac_Cowboy_Walkframe);
+const idleSprite = loadImage(Charac_Cowboy);
+const walkSprite = loadImage(Charac_Cowboy_Walkframe);
+let currentSprite = idleSprite;
+let walkCycleFrequency = 5;
+let currentCycle = 0;
+let flipped = false;
 
 export const player: Player = {
     x: 20,
@@ -28,7 +32,18 @@ export const player: Player = {
 }
 
 export function render() {
-    drawImage(idleSprite, player, player.speed.x < 0);
+    if (player.state == "running") {
+        currentCycle++;
+        if (currentCycle == walkCycleFrequency) {
+            currentCycle = 0;
+            currentSprite = currentSprite == idleSprite ? walkSprite : idleSprite;
+        }
+        flipped = player.speed.x < 0;
+    }
+    if (player.state == "idle") {
+        currentSprite = idleSprite;
+    }
+    drawImage(currentSprite, player, flipped);
 }
 
 export function update(delta: number) {
