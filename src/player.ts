@@ -28,7 +28,7 @@ export const player: Player = {
 }
 
 export function render() {
-    drawImage(idleSprite, player);
+    drawImage(idleSprite, player, player.speed.x < 0);
 }
 
 export function update(delta: number) {

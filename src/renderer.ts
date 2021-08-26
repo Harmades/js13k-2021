@@ -24,9 +24,16 @@ export function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function drawImage(image: HTMLImageElement, vector: Vector) {
+export function drawImage(image: HTMLImageElement, vector: Vector, flip: boolean = false) {
     if (!image.complete) return;
-    context.drawImage(image, Math.round(vector.x), Math.round(vector.y));
+    context.save();
+    context.translate(Math.round(vector.x), Math.round(vector.y));
+    if (flip) {
+        context.translate(16, 0);
+        context.scale(-1, 1);
+    }
+    context.drawImage(image, 0, 0);
+    context.restore();
 }
 
 export function drawImagePattern(image: HTMLImageElement, rectangle: Rectangle) {
