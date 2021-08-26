@@ -1,15 +1,22 @@
 import { input } from "./input";
 import { Rectangle } from "./rectangle";
-import { drawAsset } from "./renderer";
+import { drawImage, loadImage } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
+import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
+import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_Walkframe.png";
 
-export type Player = Rectangle & { speed: Vector; state: PlayerState }
+export type Player = Rectangle & {
+    speed: Vector;
+    state: PlayerState
+}
 
 export type PlayerState = "idle" | "running" | "coyote" | "airborne"
 
 let currentCoyoteFrame = 0;
 let currentGravity = 0;
+let idleSprite = loadImage(Charac_Cowboy);
+let walkSprite = loadImage(Charac_Cowboy_Walkframe);
 
 export const player: Player = {
     x: 20,
@@ -21,8 +28,7 @@ export const player: Player = {
 }
 
 export function render() {
-    // drawAtlas(atlasPosition, player);
-    drawAsset("player", player);
+    drawImage(idleSprite, player);
 }
 
 export function update(delta: number) {
@@ -40,8 +46,6 @@ export function update(delta: number) {
     }
     if (player.state == "running" && player.speed.x == 0 && player.speed.y == 0) player.state = "idle";
     if (player.state == "airborne" && currentGravity == 0 && player.speed.y == 0) player.state = "running";
-
-    document.getElementById("debug")!.innerText = player.state;
 
     player.speed.y += currentGravity * delta;
     if (input.up && player.state != "airborne") player.speed.y = -Settings.playerSpeedY;
