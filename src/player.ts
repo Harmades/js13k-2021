@@ -4,7 +4,7 @@ import { drawImage, loadImage } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
-import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_Walkframe.png";
+import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_walkframe.png";
 
 export type Player = Rectangle & {
     speed: Vector;
