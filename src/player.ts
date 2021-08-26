@@ -1,10 +1,11 @@
 import { input } from "./input";
 import { Rectangle } from "./rectangle";
-import { drawImage, loadImage } from "./renderer";
+import { drawImage, drawRect, loadImage } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
 import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_walkframe.png";
+import { spawn } from "./bullets";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -13,12 +14,13 @@ export type Player = Rectangle & {
 
 export type PlayerState = "idle" | "running" | "coyote" | "airborne"
 
+let gunReloading = false;
 let currentCoyoteFrame = 0;
 let currentGravity = 0;
 const idleSprite = loadImage(Charac_Cowboy);
 const walkSprite = loadImage(Charac_Cowboy_Walkframe);
 let currentSprite = idleSprite;
-let walkCycleFrequency = 5;
+let walkCycleFrequency = Settings.playerWalkCycleFrequency;
 let currentCycle = 0;
 let flipped = false;
 
@@ -67,6 +69,13 @@ export function update(delta: number) {
     if (input.left) player.speed.x = -Settings.playerSpeedX;
     else if (input.right) player.speed.x = Settings.playerSpeedX;
     else player.speed.x = 0;
+
+    if (input.space && !gunReloading) {
+        const xOffset = flipped ? -8 : Settings.playerBulletSpawnOffsetX;
+        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: flipped ? -1 : 1, y: 0 });
+        gunReloading = true;
+    }
+    if (!input.space) gunReloading = false;
 
     player.x += player.speed.x * delta;
     player.y += player.speed.y * delta;

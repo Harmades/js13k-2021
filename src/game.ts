@@ -1,6 +1,7 @@
 import { Settings } from "./settings";
 import * as Renderer from "./renderer";
 import * as Player from "./player";
+import * as Bullets from "./bullets";
 import * as Platform from "./platform";
 import * as Physics from "./physics";
 import * as Input from "./input";
@@ -30,6 +31,7 @@ export function loop(tFrame: number) {
 
 export function update(delta: number) {
     Player.update(delta);
+    Bullets.update(delta);
     Platform.update(delta);
     Physics.update(Player.player, Platform.platforms);
     Input.update(delta);

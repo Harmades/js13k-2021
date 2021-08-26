@@ -1,6 +1,7 @@
 import { Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import * as Player from "./player"
+import * as Bullets from "./bullets"
 import * as Platform from "./platform";
 import { Vector } from "./vector";
 
@@ -37,6 +38,7 @@ export function drawImage(image: HTMLImageElement, vector: Vector, flip: boolean
 }
 
 export function drawImagePattern(image: HTMLImageElement, rectangle: Rectangle) {
+    if (!image.complete) return;
     const pattern = context.createPattern(image, "repeat");
     if (pattern == null) throw new Error("Error creating pattern");
     context.fillStyle = pattern;
@@ -46,5 +48,6 @@ export function drawImagePattern(image: HTMLImageElement, rectangle: Rectangle) 
 export function render() {
     context.clearRect(0, 0, Settings.width, Settings.height);
     Player.render();
+    Bullets.render();
     Platform.render();
 }

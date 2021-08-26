@@ -3,6 +3,7 @@ export type Input = {
     down: boolean;
     left: boolean;
     right: boolean;
+    space: boolean;
     gamepadConnected: boolean;
 }
 
@@ -11,6 +12,7 @@ export const input: Input = {
     down: false,
     left: false,
     right: false,
+    space: false,
     gamepadConnected: false
 }
 
@@ -27,6 +29,7 @@ function setKey(key: string, value: boolean) {
     if (key == "ArrowDown") input.down = value;
     if (key == "ArrowLeft") input.left = value;
     if (key == "ArrowRight") input.right = value;
+    if (key == " ") input.space = value;
 }
 
 function setGamepad(gamepadIndex: number, connected: boolean) {
