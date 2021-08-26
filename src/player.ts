@@ -1,28 +1,36 @@
-import { input } from "./input";
+import { Input, input } from "./input";
 import { Rectangle } from "./rectangle";
 import { drawImage, drawRect, loadImage } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
+import { spawn } from "./bullets";
 import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
 import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_walkframe.png";
-import { spawn } from "./bullets";
+import Charac_Cow from "../asset/characters/charac_cow.png";
+import Charac_Cow_Walkframe from "../asset/characters/charac_cow_walkframe.png";
 
 export type Player = Rectangle & {
     speed: Vector;
-    state: PlayerState
+    state: PlayerState;
+    combatState: PlayerCombatState;
 }
 
 export type PlayerState = "idle" | "running" | "coyote" | "airborne"
+export type PlayerCombatState = "human" | "cow"
 
 let gunReloading = false;
 let currentCoyoteFrame = 0;
 let currentGravity = 0;
-const idleSprite = loadImage(Charac_Cowboy);
-const walkSprite = loadImage(Charac_Cowboy_Walkframe);
-let currentSprite = idleSprite;
+const humanIdleSprite = loadImage(Charac_Cowboy);
+const humanWalkSprite = loadImage(Charac_Cowboy_Walkframe);
+const cowIdleSprite = loadImage(Charac_Cow);
+const cowWalkSprite = loadImage(Charac_Cow_Walkframe);
+let currentSprite = humanIdleSprite;
 let walkCycleFrequency = Settings.playerWalkCycleFrequency;
 let currentCycle = 0;
 let flipped = false;
+const morphKeyPress = createReleasedKeyPress("m");
+const shootKeyPress = createReleasedKeyPress("space");
 
 export const player: Player = {
     x: 20,
@@ -30,10 +38,13 @@ export const player: Player = {
     width: 15,
     height: 16,
     speed: { x: 0, y: 0 },
-    state: "airborne"
+    state: "airborne",
+    combatState: "human"
 }
 
 export function render() {
+    const idleSprite = player.combatState == "human" ? humanIdleSprite : cowIdleSprite;
+    const walkSprite = player.combatState == "human" ? humanWalkSprite : cowWalkSprite;
     if (player.state == "running") {
         currentCycle++;
         if (currentCycle == walkCycleFrequency) {
@@ -42,7 +53,7 @@ export function render() {
         }
         flipped = player.speed.x < 0;
     }
-    if (player.state == "idle") {
+    if (player.state == "idle" || player.state == "airborne" || player.state == "coyote") {
         currentSprite = idleSprite;
     }
     drawImage(currentSprite, player, flipped);
@@ -70,12 +81,11 @@ export function update(delta: number) {
     else if (input.right) player.speed.x = Settings.playerSpeedX;
     else player.speed.x = 0;
 
-    if (input.space && !gunReloading) {
+    if (shootKeyPress()) {
         const xOffset = flipped ? -8 : Settings.playerBulletSpawnOffsetX;
         spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: flipped ? -1 : 1, y: 0 });
-        gunReloading = true;
     }
-    if (!input.space) gunReloading = false;
+    if (morphKeyPress()) player.combatState = player.combatState == "human" ? "cow" : "human";
 
     player.x += player.speed.x * delta;
     player.y += player.speed.y * delta;
@@ -91,4 +101,16 @@ export function collide(translationVector: Vector) {
         currentGravity = 0;
         player.speed.y = 0;
     }
+}
+
+function createReleasedKeyPress(key: keyof Input) {
+    let released = true;
+    return () => {
+        if (input[key] && released) {
+            released = false;
+            return true;
+        }
+        if (!input[key]) released = true;
+        return false;
+    };
 }
