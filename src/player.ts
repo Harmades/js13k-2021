@@ -1,15 +1,10 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { drawImage, loadImage } from "./renderer";
+import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { spawn } from "./bullet";
 import { createCounter } from "./animation";
-import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
-import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_walkframe.png";
-import Charac_Cow from "../asset/characters/charac_cow.png";
-import Charac_Cow_Walkframe from "../asset/characters/charac_cow_walkframe.png";
-import Charac_Cow_Dashframe from "../asset/characters/charac_cow_dashframe.png";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -20,12 +15,12 @@ export type Player = Rectangle & {
 export type PlayerState = "idle" | "running" | "coyote" | "airborne" | "dash"
 export type PlayerCombatState = "human" | "cow"
 
-const humanIdleSprite = loadImage(Charac_Cowboy);
-const humanWalkSprite = loadImage(Charac_Cowboy_Walkframe);
-const cowIdleSprite = loadImage(Charac_Cow);
-const cowWalkSprite = loadImage(Charac_Cow_Walkframe);
-const cowDashSprite = loadImage(Charac_Cow_Dashframe);
-let currentSprite = humanIdleSprite;
+const humanIdleSprite = "charac_cowboy.png";
+const humanWalkSprite = "charac_cowboy_walkframe.png";
+const cowIdleSprite = "charac_cow.png";
+const cowWalkSprite = "charac_cow_walkframe.png";
+const cowDashSprite = "charac_cow_dashframe.png";
+let currentSprite: Sprite = humanIdleSprite;
 
 let currentGravity = 0;
 let flipped = false;
@@ -62,7 +57,7 @@ export function render() {
     if (player.state == "dash") {
         currentSprite = cowDashSprite;
     }
-    drawImage(currentSprite, player, flipped);
+    draw(currentSprite, player, flipped);
 }
 
 export function update(delta: number) {

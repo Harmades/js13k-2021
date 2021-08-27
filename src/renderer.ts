@@ -5,11 +5,23 @@ import * as Enemy from "./enemy"
 import * as Bullets from "./bullet"
 import * as Platform from "./platform";
 import { Vector } from "./vector";
+import Atlas from "../asset/atlas.png";
+import AtlasMetadata from "../asset/atlas.json";
+import { round } from "./math";
+
+export type Sprite = keyof typeof AtlasMetadata.frames
 
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 canvas.width = Settings.width;
 canvas.height = Settings.height;
 const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+const atlas = loadImage(Atlas);
+
+const offscreenCanvas = document.createElement("canvas");
+offscreenCanvas.width = 16;
+offscreenCanvas.height = 16;
+const offscreenContext = offscreenCanvas.getContext("2d") as CanvasRenderingContext2D;
 
 export function drawRect(rectangle: Rectangle, color: string) {
     context.save();
@@ -20,30 +32,36 @@ export function drawRect(rectangle: Rectangle, color: string) {
     context.restore();
 }
 
-export function loadImage(path: string): HTMLImageElement {
+function loadImage(path: string): HTMLImageElement {
     const image = new Image(16, 16);
     image.src = path;
     return image;
 }
 
-export function drawImage(image: HTMLImageElement, vector: Vector, flip: boolean = false) {
-    if (!image.complete) return;
+export function draw(key: Sprite, vector: Vector, flip: boolean = false) {
+    if (!atlas.complete) return;
+    const frame = AtlasMetadata.frames[key].frame;
     context.save();
-    context.translate(Math.round(vector.x), Math.round(vector.y));
+    context.translate(round(vector.x), round(vector.y));
     if (flip) {
         context.translate(16, 0);
         context.scale(-1, 1);
     }
-    context.drawImage(image, 0, 0);
+    context.drawImage(atlas, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
     context.restore();
 }
 
-export function drawImagePattern(image: HTMLImageElement, rectangle: Rectangle) {
-    if (!image.complete) return;
-    const pattern = context.createPattern(image, "repeat");
+export function drawPattern(key: Sprite, rectangle: Rectangle) {
+    if (!atlas.complete) return;
+    const frame = AtlasMetadata.frames[key].frame;
+    offscreenContext.drawImage(atlas, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+    const pattern = context.createPattern(offscreenCanvas, "repeat");
+    context.save();
+    context.translate(rectangle.x, rectangle.y);
     if (pattern == null) throw new Error("Error creating pattern");
     context.fillStyle = pattern;
-    context.fillRect(Math.round(rectangle.x), Math.round(rectangle.y), rectangle.width, rectangle.height);
+    context.fillRect(0, 0, rectangle.width, rectangle.height);
+    context.restore();
 }
 
 export function render() {

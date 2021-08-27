@@ -1,12 +1,11 @@
 import { Rectangle } from "./rectangle";
-import { drawImagePattern, loadImage } from "./renderer";
-import Floor_Tile from "../asset/tiles/floor_tile.png";
+import { drawPattern } from "./renderer";
 
 export type Platform = Rectangle & {
     collision: boolean
 }
 
-const sprite = loadImage(Floor_Tile);
+const sprite = "floor_tile.png";
 
 export const platforms: Platform[] = [
     {
@@ -31,6 +30,6 @@ export function render() {
     for (const platform of platforms) {
         // const color = platform.collision ? "#FF0000" : "#000000";
         // drawRect(platform, color);
-        drawImagePattern(sprite, platform);
+        drawPattern(sprite, platform);
     }
 }

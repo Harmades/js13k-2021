@@ -1,6 +1,5 @@
 import { Rectangle } from "./rectangle";
-import Bullet from "../asset/other/bullet.png";
-import { drawImage, loadImage } from "./renderer";
+import { draw } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 
@@ -8,7 +7,7 @@ export type Bullet = Rectangle & { currentLifetime: number, alongVector: Vector 
 
 let bullets: Bullet[] = [];
 
-const sprite = loadImage(Bullet);
+const sprite = "bullet.png";
 const spriteHeight = 6;
 const spriteWidth = 8;
 
@@ -25,7 +24,7 @@ export function spawn(position: Vector, alongVector: Vector) {
 
 export function render() {
     for (const bullet of bullets) {
-        drawImage(sprite, bullet);
+        draw(sprite, bullet);
     }
 }
 

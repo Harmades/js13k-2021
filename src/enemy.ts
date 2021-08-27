@@ -1,15 +1,9 @@
 import { Rectangle } from "./rectangle";
 import { createCounter } from "./animation";
-import Enemy_Butcher from "../asset/characters/enemy_butcher.png";
-import Enemy_Butcher_Walkframe from "../asset/characters/enemy_butcher_walkframe.png";
-import Enemy_Human from "../asset/characters/enemy_human_butcher.png";
-import Enemy_Human_Walkframe from "../asset/characters/enemy_human_butcher.png";
-import Enemy_Shield from "../asset/characters/enemy_shield_butcher_walkframe.png";
-import Enemy_Shield_Walkframe from "../asset/characters/enemy_shield_butcher_walkframe.png";
 import { Settings } from "./settings";
-import { drawImage, loadImage } from "./renderer";
 import { Vector, zero } from "./vector";
 import { sign } from "./math";
+import { draw, Sprite } from "./renderer";
 
 export type Enemy = Rectangle & {
     speed: Vector,
@@ -34,13 +28,13 @@ export const enemies: Enemy[] = [{
     flipped: false
 }];
 
-const enemyHumanIdleSprite = loadImage(Enemy_Human);
-const enemyHumanWalkSprite = loadImage(Enemy_Human_Walkframe);
-const enemyButcherIdleSprite = loadImage(Enemy_Butcher);
-const enemyButcherWalkSprite = loadImage(Enemy_Butcher_Walkframe);
-const enemyShieldIdleSprite = loadImage(Enemy_Shield);
-const enemyShieldWalkSprite = loadImage(Enemy_Shield_Walkframe);
-let currentSprite = Enemy_Butcher;
+const enemyHumanIdleSprite = "enemy_human_butcher.png";
+const enemyHumanWalkSprite = "enemy_human_butcher_walkframe.png";
+const enemyButcherIdleSprite = "enemy_butcher.png";
+const enemyButcherWalkSprite = "enemy_butcher_walkframe.png";
+const enemyShieldIdleSprite = "enemy_shield_butcher.png";
+const enemyShieldWalkSprite = "enemy_shield_butcher_walkframe.png";
+let currentSprite: Sprite = enemyButcherIdleSprite;
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const patrols = enemies.map(enemy => createPatrol(enemy));
 
@@ -71,7 +65,7 @@ export function render() {
                 }
             }
         }
-        drawImage(currentSprite, enemy, enemy.flipped);
+        draw(currentSprite, enemy, enemy.flipped);
     }
 }
 
