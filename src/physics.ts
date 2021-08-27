@@ -1,4 +1,5 @@
 import { Enemy } from "./enemy";
+import { sign } from "./math";
 import { Platform } from "./platform";
 import { collide, Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
@@ -51,11 +52,6 @@ function getTranslationVector(player: Player, rectangle: Rectangle, collision: C
     const ySign = sign(playerCenter.y - platformCenter.y);
     const translation = collision.width > collision.height ? { x: 0, y: ySign * collision.height } : { x: xSign * collision.width, y: 0 };
     return translation;
-}
-
-function sign(value: number): number {
-    const sign = Math.sign(value);
-    return sign == 0 ? 1 : sign;
 }
 
 function xProject(rectangle: Rectangle): Vector {

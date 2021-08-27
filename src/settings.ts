@@ -18,6 +18,10 @@ export const Settings = {
     playerBulletSpawnOffsetX: 16,
     playerBulletSpawnOffsetY: 6,
 
+    enemySpeedX: 40,
+
     bulletSpeedX: 100,
-    bulletLifetime: 1000
+    bulletLifetime: 1000,
+
+    epsilon: 0.1,
 }
