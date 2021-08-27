@@ -1,25 +1,17 @@
-export type Input = {
-    up: boolean;
-    down: boolean;
-    left: boolean;
-    right: boolean;
-    space: boolean;
-    m: boolean;
-    gamepadConnected: boolean;
-}
-
-export const input: Input = {
+export const input = {
     up: false,
     down: false,
     left: false,
     right: false,
     space: false,
     m: false,
+    shift: false,
     gamepadConnected: false
 }
 
+export type Input = typeof input;
+
 let currentGamepadIndex = 0;
-// let gamepad: Gamepad | null = null;
 
 document.addEventListener("keydown", event => setKey(event.key, true));
 document.addEventListener("keyup", event => setKey(event.key, false));
@@ -33,6 +25,7 @@ function setKey(key: string, value: boolean) {
     if (key == "ArrowRight") input.right = value;
     if (key == " ") input.space = value;
     if (key == "m") input.m = value;
+    if (key == "Shift") input.shift = value;
 }
 
 function setGamepad(gamepadIndex: number, connected: boolean) {

@@ -11,8 +11,10 @@ export const Settings = {
 
     playerSpeedX: 50,
     playerSpeedY: 200,
+    playerDashSpeedX: 150,
+    playerDashFrames: 200,
     playerCoyoteFrames: 250,
-    playerWalkCycleFrequency: 5,
+    playerWalkCycleFrames: 5,
     playerBulletSpawnOffsetX: 16,
     playerBulletSpawnOffsetY: 6,
 
