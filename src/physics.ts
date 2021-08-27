@@ -1,3 +1,4 @@
+import { Enemy } from "./enemy";
 import { Platform } from "./platform";
 import { collide, Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
@@ -20,7 +21,7 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
     };
 }
 
-export function update(player: Player, platforms: Platform[]) {
+export function update(player: Player, platforms: Platform[], enemies: Enemy[]) {
     for (const platform of platforms) {
         const collision = getCollision(player, platform)
         if (collision != null) {
@@ -31,11 +32,21 @@ export function update(player: Player, platforms: Platform[]) {
             platform.collision = false;
         }
     }
+
+    for (const enemy of enemies) {
+        const collision = getCollision(player, enemy)
+        if (collision != null) {
+            const translationVector = getTranslationVector(player, enemy, collision);
+            add(player, translationVector);
+            collide(translationVector);
+        } else {
+        }
+    }
 }
 
-function getTranslationVector(player: Player, platform: Platform, collision: Collision): Vector {
+function getTranslationVector(player: Player, rectangle: Rectangle, collision: Collision): Vector {
     const playerCenter = getCenter(player);
-    const platformCenter = getCenter(platform);
+    const platformCenter = getCenter(rectangle);
     const xSign = sign(playerCenter.x - platformCenter.x);
     const ySign = sign(playerCenter.y - platformCenter.y);
     const translation = collision.width > collision.height ? { x: 0, y: ySign * collision.height } : { x: xSign * collision.width, y: 0 };

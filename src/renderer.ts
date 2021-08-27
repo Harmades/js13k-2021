@@ -1,7 +1,8 @@
 import { Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import * as Player from "./player"
-import * as Bullets from "./bullets"
+import * as Enemy from "./enemy"
+import * as Bullets from "./bullet"
 import * as Platform from "./platform";
 import { Vector } from "./vector";
 
@@ -50,4 +51,5 @@ export function render() {
     Player.render();
     Bullets.render();
     Platform.render();
+    Enemy.render();
 }

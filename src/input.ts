@@ -42,3 +42,15 @@ export function update(delta: number) {
     input.left = gamepad.buttons[14].pressed;
     input.right = gamepad.buttons[15].pressed;
 }
+
+export function createReleasedKeyPress(key: keyof Input) {
+    let released = true;
+    return () => {
+        if (input[key] && released) {
+            released = false;
+            return true;
+        }
+        if (!input[key]) released = true;
+        return false;
+    };
+}

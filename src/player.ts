@@ -1,9 +1,10 @@
-import { Input, input } from "./input";
+import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
 import { drawImage, loadImage } from "./renderer";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
-import { spawn } from "./bullets";
+import { spawn } from "./bullet";
+import { createCounter } from "./animation";
 import Charac_Cowboy from "../asset/characters/charac_cowboy.png";
 import Charac_Cowboy_Walkframe from "../asset/characters/charac_cowboy_walkframe.png";
 import Charac_Cow from "../asset/characters/charac_cow.png";
@@ -117,31 +118,6 @@ export function collide(translationVector: Vector) {
     }
     if (translationVector.y < 0) {
         currentGravity = 0;
-        player.speed.y = 0;
     }
-}
-
-function createReleasedKeyPress(key: keyof Input) {
-    let released = true;
-    return () => {
-        if (input[key] && released) {
-            released = false;
-            return true;
-        }
-        if (!input[key]) released = true;
-        return false;
-    };
-}
-
-function createCounter(threshold: number) {
-    let counter = 0;
-    return () => {
-        if (counter == threshold) {
-            counter = 0;
-            return true;
-        } else {
-            counter++;
-            return false;
-        }
-    };
+    if (translationVector.y != 0) player.speed.y = 0;
 }
