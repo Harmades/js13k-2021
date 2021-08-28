@@ -103,6 +103,7 @@ export function render() {
     Bullet.render();
     Enemy.render();
     Player.render();
+    Cow.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
@@ -114,7 +115,6 @@ export function staticRender() {
     sourceContext = atlasContext;
     Background.render();
     Platform.render();
-    Cow.render();
 }
 
 function atlasRender() {

@@ -42,7 +42,8 @@ export function load() {
                 x: x * 16,
                 y: y * 16,
                 width: 16,
-                height: 16
+                height: 16,
+                collected: false
             })
         }
     }

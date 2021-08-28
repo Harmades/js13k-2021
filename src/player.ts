@@ -11,6 +11,7 @@ export type Player = Rectangle & {
     speed: Vector;
     state: PlayerState;
     combatState: PlayerCombatState;
+    cows: number;
 }
 
 export type PlayerState = "idle" | "running" | "coyote" | "airborne" | "dash"
@@ -41,7 +42,8 @@ export const player: Player = {
     height: 16,
     speed: { x: 0, y: 0 },
     state: "airborne",
-    combatState: "human"
+    combatState: "human",
+    cows: 0
 }
 
 export function render() {
@@ -126,3 +128,5 @@ export function die() {
     player.x = currentSpawn.x;
     player.y = currentSpawn.y;
 }
+
+export function collect() { player.cows++; }

@@ -1,7 +1,8 @@
+import { cows, disable } from "./cow";
 import { Enemy } from "./enemy";
 import { abs, sign } from "./math";
 import { Platform } from "./platform";
-import { collide, die, Player } from "./player";
+import { collect, collide, die, Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
@@ -24,7 +25,8 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
 }
 
 export function update(player: Player, platforms: Platform[], enemies: Enemy[]) {
-    for (const platform of getPlatformsNearPlayer(player, platforms)) {
+    for (const platform of getEntitiesNearPlayer(player, platforms)) {
+        if (!platform.collision) continue;
         const collision = getCollision(player, platform)
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
@@ -34,23 +36,29 @@ export function update(player: Player, platforms: Platform[], enemies: Enemy[]) 
         }
     }
 
-    for (const enemy of enemies) {
+    for (const enemy of getEntitiesNearPlayer(player, enemies)) {
         const collision = getCollision(player, enemy)
         if (collision != null) {
             const translationVector = getTranslationVector(player, enemy, collision);
             add(player, translationVector);
             die();
-        } else {
+        }
+    }
+
+    for (const cow of getEntitiesNearPlayer(player, cows)) {
+        const collision = getCollision(player, cow);
+        if (collision != null && !cow.collected) {
+            collect();
+            disable(cow);
         }
     }
 }
 
-function getPlatformsNearPlayer(player: Player, platforms: Platform[]) {
+function getEntitiesNearPlayer<T extends Rectangle>(player: Player, rectangles: T[]) {
     const closePlatforms = [];
-    for (const platform of platforms) {
-        if (!platform.collision) continue;
-        if (abs(platform.x - player.x) <= Settings.playerCollisionGrid && abs(platform.y - player.y) <= Settings.playerCollisionGrid) {
-            closePlatforms.push(platform);
+    for (const rectangle of rectangles) {
+        if (abs(rectangle.x - player.x) <= Settings.playerCollisionGrid && abs(rectangle.y - player.y) <= Settings.playerCollisionGrid) {
+            closePlatforms.push(rectangle);
         }
     }
     return closePlatforms;
