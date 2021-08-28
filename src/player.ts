@@ -53,7 +53,6 @@ export function render() {
         if (walkCounter()) {
             currentSprite = currentSprite == idleSprite ? walkSprite : idleSprite;
         }
-        flipped = player.speed.x < 0;
     }
     if (player.state == "idle" || player.state == "airborne" || player.state == "coyote") {
         currentSprite = idleSprite;
@@ -61,6 +60,7 @@ export function render() {
     if (player.state == "dash") {
         currentSprite = cowDashSprite;
     }
+    if (player.speed.x != 0) flipped = player.speed.x < 0;
     draw(currentSprite, player, flipped);
 }
 
