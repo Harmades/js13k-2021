@@ -1,8 +1,8 @@
 export const Settings = {
     debug: false,
 
-    width: 240,
-    height: 160,
+    width: 119 * 16,
+    height: 85 * 16,
 
     tileSize: 8,
 

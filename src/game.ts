@@ -6,6 +6,9 @@ import * as Bullets from "./bullet";
 import * as Platform from "./platform";
 import * as Physics from "./physics";
 import * as Input from "./input";
+import * as World from "./world";
+
+World.load();
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
@@ -35,7 +38,7 @@ export function update(delta: number) {
     Enemy.update(delta);
     Bullets.update(delta);
     Platform.update(delta);
-    Physics.update(Player.player, Platform.platforms, Enemy.enemies);
+    // Physics.update(Player.player, Platform.platforms, Enemy.enemies);
     Input.update(delta);
 }
 

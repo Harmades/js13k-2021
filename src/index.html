@@ -7,9 +7,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         .game-canvas {
-            background-color: ghostwhite;
-            width: 930px;
-            height: 640px;
+            width: 930 * 2px;
+            height: 640 * 2px;
             image-rendering: pixelated;
         }
 
@@ -17,6 +16,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        #canvas-container {
+            position: relative;
+        }
+
+        .stack {
+            position: absolute;
+            top: 0px;
+            left: 0px;
         }
 
         html, body {
@@ -28,7 +37,11 @@
 </head>
 
 <body class="game-container">
-    <canvas id="gameCanvas" class="game-canvas"></canvas>
+    <div id="canvas-container">
+        <canvas id="backgroundCanvas" class="game-canvas"></canvas>
+        <canvas id="staticCanvas" class="game-canvas stack"></canvas>
+        <canvas id="gameCanvas" class="game-canvas stack"></canvas>
+    </div>
 </body>
 
 </html>

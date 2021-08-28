@@ -33,8 +33,8 @@ const shootKeyPress = createReleasedKeyPress("space");
 const dashKeyPress = createReleasedKeyPress("shift");
 
 export const player: Player = {
-    x: 20,
-    y: 30,
+    x: 3 * 16,
+    y: 26 * 16,
     width: 15,
     height: 16,
     speed: { x: 0, y: 0 },

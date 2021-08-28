@@ -1,7 +1,7 @@
 import { Rectangle } from "./rectangle";
 import { createCounter } from "./animation";
 import { Settings } from "./settings";
-import { Vector, zero } from "./vector";
+import { Vector } from "./vector";
 import { sign } from "./math";
 import { draw, Sprite } from "./renderer";
 
@@ -16,17 +16,7 @@ export type Enemy = Rectangle & {
 export type EnemyType = "human" | "butcher" | "shield";
 export type EnemyState = "idle" | "running";
 
-export const enemies: Enemy[] = [{
-    x: 16 * 8,
-    y: 16 * 4,
-    speed: zero(),
-    width: 16,
-    height: 16,
-    state: "idle",
-    type: "human",
-    patrol: [{ x: 16 * 8, y: 16 * 4 }, { x: 16 * 10, y: 16 * 4} ],
-    flipped: false
-}];
+export const enemies: Enemy[] = []
 
 const enemyHumanIdleSprite = "enemy_human_butcher.png";
 const enemyHumanWalkSprite = "enemy_human_butcher_walkframe.png";
@@ -72,7 +62,7 @@ export function render() {
 export function update(delta: number) {
     for (let i = 0; i < enemies.length; i++) {
         const patrol = patrols[i];
-        patrol(delta);
+        // patrol(delta);
     }
 }
 
