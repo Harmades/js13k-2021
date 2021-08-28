@@ -6,10 +6,11 @@ import * as Bullet from "./bullet"
 import * as Platform from "./platform";
 import * as Background from "./background";
 import * as Camera from "./camera";
+import * as Cow from "./cow";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import AtlasMetadata from "../asset/atlas.json";
-import { ceil, floor, round } from "./math";
+import { floor, round } from "./math";
 
 export type Sprite = keyof typeof AtlasMetadata.frames
 
@@ -113,6 +114,7 @@ export function staticRender() {
     sourceContext = atlasContext;
     Background.render();
     Platform.render();
+    Cow.render();
 }
 
 function atlasRender() {

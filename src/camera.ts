@@ -1,4 +1,3 @@
-import { floor, round } from "./math";
 import { Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { cameraRender } from "./renderer";

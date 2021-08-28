@@ -2,7 +2,7 @@ import { Rectangle } from "./rectangle";
 import { createCounter } from "./animation";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
-import { sign } from "./math";
+import { abs, sign } from "./math";
 import { draw, Sprite } from "./renderer";
 
 export type Enemy = Rectangle & {
@@ -71,11 +71,11 @@ function createPatrol(enemy: Enemy) {
     return (delta: number) => {
         const targetIndex = (lastPositionIndex + 1) % enemy.patrol.length;
         const target = enemy.patrol[targetIndex];
-        if (Math.abs(target.x - enemy.x) <= Settings.epsilon) {
+        if (abs(target.x - enemy.x) <= Settings.epsilon) {
             lastPositionIndex = targetIndex;
         } else {
-            const sign = Math.sign(target.x - enemy.x);
-            enemy.speed.x = sign * Settings.enemySpeedX;
+            const s = sign(target.x - enemy.x);
+            enemy.speed.x = s * Settings.enemySpeedX;
             enemy.x += enemy.speed.x * delta;
         }
     };

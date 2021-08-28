@@ -1,18 +1,18 @@
 import Level from "../asset/lvl_test.json";
-import IdMap from "../asset/idMap.json";
 import { platforms } from "./platform";
 import { enemies } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./math";
+import { cows } from "./cow";
 
 export function load() {
     const layer = Level.layers[1];
     const data = layer.data;
     for (let i = 0; i < data.length; i++) {
-        const id = data[i];
+        const id = data[i] % Math.pow(2, 31);
         const x = i % layer.width;
-        const y = Math.floor(i / layer.width);
-        if (id == 19 || id == 18) {
+        const y = floor(i / layer.width);
+        if (id == 18 || id == 19 || id == 20) {
             const adjacentTiles = getAdjacentTiles(i, data, layer.width, layer.height);
             const collision = adjacentTiles.some(tileId => tileId == 0);
             platforms.push({
@@ -21,7 +21,7 @@ export function load() {
                 width: 16,
                 height: 16,
                 collision: collision,
-                inner: id == 19
+                type: id == 18 ? "floor" : id == 19 ? "wall" : "spikes"
             });
         }
         if (id == 7 || id == 8 || id == 9) {
@@ -35,6 +35,14 @@ export function load() {
                 speed: zero(),
                 state: "idle",
                 type: id == 7 ? "human" : id == 8 ? "butcher" : "shield"
+            })
+        }
+        if (id == 10) {
+            cows.push({
+                x: x * 16,
+                y: y * 16,
+                width: 16,
+                height: 16
             })
         }
     }

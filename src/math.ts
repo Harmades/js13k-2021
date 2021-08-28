@@ -10,3 +10,5 @@ export function floor(value: number) { return Math.floor(value); }
 export function abs(value: number) { return Math.abs(value); }
 
 export function ceil(value: number) { return Math.ceil(value); }
+
+export function max(value1: number, value2: number) { return Math.max(value1, value2); }
