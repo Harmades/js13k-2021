@@ -24,6 +24,7 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
 
 export function update(player: Player, platforms: Platform[], enemies: Enemy[]) {
     for (const platform of platforms) {
+        if (!platform.collision) continue;
         const collision = getCollision(player, platform)
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);

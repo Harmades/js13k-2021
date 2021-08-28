@@ -1,5 +1,5 @@
 import { Rectangle } from "./rectangle";
-import { drawPattern } from "./renderer";
+import { drawPattern, drawRect } from "./renderer";
 
 export type Platform = Rectangle & {
     collision: boolean,
@@ -17,7 +17,7 @@ export function update(delta: number) {
 export function render() {
     for (const platform of platforms) {
         // const color = platform.collision ? "#FF0000" : "#000000";
-        // drawRect(platform, color);
         drawPattern(platform.inner ? innerSprite : sprite, platform);
+        if (platform.collision) drawRect(platform, "#FF0000");
     }
 }

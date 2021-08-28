@@ -4,3 +4,5 @@ export function sign(value: number): number {
 }
 
 export function round(value: number) { return Math.round(value); }
+
+export function floor(value: number) { return Math.floor(value); }
