@@ -1,7 +1,7 @@
 import { Enemy } from "./enemy";
 import { abs, sign } from "./math";
 import { Platform } from "./platform";
-import { collide, Player } from "./player";
+import { collide, die, Player } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
@@ -29,7 +29,8 @@ export function update(player: Player, platforms: Platform[], enemies: Enemy[]) 
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
-            collide(translationVector);
+            if (platform.type == "spikes") die();
+            else collide(translationVector);
         }
     }
 
@@ -38,7 +39,7 @@ export function update(player: Player, platforms: Platform[], enemies: Enemy[]) 
         if (collision != null) {
             const translationVector = getTranslationVector(player, enemy, collision);
             add(player, translationVector);
-            collide(translationVector);
+            die();
         } else {
         }
     }

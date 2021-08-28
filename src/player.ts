@@ -2,7 +2,7 @@ import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
 import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
-import { Vector } from "./vector";
+import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
 import { createCounter } from "./animation";
 import { track } from "./camera";
@@ -26,6 +26,7 @@ let currentSprite: Sprite = humanIdleSprite;
 let currentGravity = 0;
 let flipped = false;
 let dashExhausted = false;
+let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
 const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const dashCounter = createCounter(Settings.playerDashFrames);
@@ -118,4 +119,10 @@ export function collide(translationVector: Vector) {
         currentGravity = 0;
     }
     if (translationVector.y != 0) player.speed.y = 0;
+}
+
+export function die() {
+    player.speed = zero();
+    player.x = currentSpawn.x;
+    player.y = currentSpawn.y;
 }

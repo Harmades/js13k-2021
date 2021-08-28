@@ -7,8 +7,6 @@ export const Settings = {
     width: 119 * 16,
     height: 85 * 16,
 
-    tileSize: 8,
-
     engineTimeResolution: 1,
     gravity: 500,
 
