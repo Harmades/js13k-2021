@@ -5,6 +5,7 @@ import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { spawn } from "./bullet";
 import { createCounter } from "./animation";
+import { track } from "./camera";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -105,6 +106,8 @@ export function update(delta: number) {
     player.y += player.speed.y * delta;
 
     currentGravity = Settings.gravity;
+
+    track(player);
 }
 
 export function collide(translationVector: Vector) {

@@ -1,6 +1,9 @@
 export const Settings = {
     debug: false,
 
+    cameraWidth: 240,
+    cameraHeight: 160,
+
     width: 119 * 16,
     height: 85 * 16,
 
@@ -17,6 +20,7 @@ export const Settings = {
     playerWalkCycleFrames: 5,
     playerBulletSpawnOffsetX: 16,
     playerBulletSpawnOffsetY: 6,
+    playerCollisionGrid: 16 * 10,
 
     enemySpeedX: 40,
 

@@ -18,6 +18,5 @@ export function render() {
     for (const platform of platforms) {
         // const color = platform.collision ? "#FF0000" : "#000000";
         drawPattern(platform.inner ? innerSprite : sprite, platform);
-        if (platform.collision) drawRect(platform, "#FF0000");
     }
 }

@@ -7,9 +7,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         .game-canvas {
-            width: 930 * 2px;
-            height: 640 * 2px;
+            width: 930px;
+            height: 640px;
             image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
         }
 
         .game-container {
@@ -32,16 +34,17 @@
             height: 100%;
             width: 100%;
             margin: 0px;
+            background-color: ghostwhite;
         }
     </style>
 </head>
 
 <body class="game-container">
-    <div id="canvas-container">
+    <canvas id="gameCanvas" class="game-canvas"></canvas>
+    <!-- <div id="canvas-container">
         <canvas id="backgroundCanvas" class="game-canvas"></canvas>
         <canvas id="staticCanvas" class="game-canvas stack"></canvas>
-        <canvas id="gameCanvas" class="game-canvas stack"></canvas>
-    </div>
+    </div> -->
 </body>
 
 </html>

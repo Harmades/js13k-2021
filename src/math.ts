@@ -6,3 +6,7 @@ export function sign(value: number): number {
 export function round(value: number) { return Math.round(value); }
 
 export function floor(value: number) { return Math.floor(value); }
+
+export function abs(value: number) { return Math.abs(value); }
+
+export function ceil(value: number) { return Math.ceil(value); }

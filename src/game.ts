@@ -38,7 +38,7 @@ export function update(delta: number) {
     Enemy.update(delta);
     Bullets.update(delta);
     Platform.update(delta);
-    // Physics.update(Player.player, Platform.platforms, Enemy.enemies);
+    Physics.update(Player.player, Platform.platforms, Enemy.enemies);
     Input.update(delta);
 }
 
