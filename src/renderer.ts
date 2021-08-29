@@ -7,6 +7,7 @@ import * as Platform from "./platform";
 import * as Background from "./background";
 import * as Camera from "./camera";
 import * as Cow from "./cow";
+import * as Ui from "./ui";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import AtlasMetadata from "../asset/atlas.json";
@@ -89,6 +90,11 @@ export function drawPattern(key: Sprite, rectangle: Rectangle) {
     destinationContext.restore();
 }
 
+export function drawText(text: string) {
+    cameraContext.font = "12px serif";
+    cameraContext.fillText(text, 190, 20);
+}
+
 export function cameraRender(camera: Camera.Camera) {
     const cx = floor(camera.x);
     const cy = round(camera.y);
@@ -108,6 +114,7 @@ export function render() {
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
     Camera.render();
+    Ui.render();
 }
 
 export function staticRender() {
