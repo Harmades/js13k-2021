@@ -1,7 +1,7 @@
 import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
 import { bulletHit, Enemy, enemyCollide } from "./enemy";
-import { abs, sign } from "./math";
+import { abs, sign } from "./alias";
 import { Platform } from "./platform";
 import { collect, collide, playerDie } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
@@ -20,8 +20,8 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
     return {
         x: xOverlap.x,
         y: yOverlap.x,
-        width: xOverlap.y - xOverlap.x,
-        height: yOverlap.y - yOverlap.x
+        w: xOverlap.y - xOverlap.x,
+        h: yOverlap.y - yOverlap.x
     };
 }
 
@@ -77,16 +77,16 @@ function getTranslationVector(player: Rectangle, rectangle: Rectangle, collision
     const platformCenter = getCenter(rectangle);
     const xSign = sign(playerCenter.x - platformCenter.x);
     const ySign = sign(playerCenter.y - platformCenter.y);
-    const translation = collision.width > collision.height ? { x: 0, y: ySign * collision.height } : { x: xSign * collision.width, y: 0 };
+    const translation = collision.w > collision.h ? { x: 0, y: ySign * collision.h } : { x: xSign * collision.w, y: 0 };
     return translation;
 }
 
 function xProject(rectangle: Rectangle): Vector {
-    return { x: rectangle.x, y: rectangle.x + rectangle.width };
+    return { x: rectangle.x, y: rectangle.x + rectangle.w };
 }
 
 function yProject(rectangle: Rectangle): Vector {
-    return { x: rectangle.y, y: rectangle.y + rectangle.height };
+    return { x: rectangle.y, y: rectangle.y + rectangle.h };
 }
 
 function getOverlap(s1: Vector, s2: Vector): Overlap | null {

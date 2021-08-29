@@ -11,46 +11,34 @@ import * as Ui from "./ui";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import AtlasMetadata from "../asset/atlas.json";
-import { floor, round } from "./math";
+import { createElement, floor, getElementById, round } from "./alias";
 
 export type Sprite = keyof typeof AtlasMetadata.frames
 
-const cameraCanvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
-cameraCanvas.width = Settings.cameraWidth;
-cameraCanvas.height = Settings.cameraHeight;
-const cameraContext = cameraCanvas.getContext("2d") as CanvasRenderingContext2D;
-
-const staticCanvas = document.createElement("canvas") as HTMLCanvasElement;
-staticCanvas.width = Settings.width;
-staticCanvas.height = Settings.height;
-const staticContext = staticCanvas.getContext("2d") as CanvasRenderingContext2D;
-
-const playerCanvas = document.createElement("canvas") as HTMLCanvasElement;
-playerCanvas.width = Settings.width;
-playerCanvas.height = Settings.height;
-const playerContext = playerCanvas.getContext("2d") as CanvasRenderingContext2D;
-
-const atlasCanvas = document.createElement("canvas") as HTMLCanvasElement;
-atlasCanvas.width = Settings.width;
-atlasCanvas.height = Settings.height;
-const atlasContext = atlasCanvas.getContext("2d") as CanvasRenderingContext2D;
+const [cameraCanvas, cameraContext] = createCanvas(Settings.cameraWidth, Settings.cameraHeight, "gameCanvas");
+const [staticCanvas, staticContext] = createCanvas(Settings.width, Settings.height);
+const [playerCanvas, playerContext] = createCanvas(Settings.width, Settings.height);
+const [atlasCanvas, atlasContext] = createCanvas(Settings.width, Settings.height);
+const [offscreenCanvas, offscreenContext] = createCanvas(16, 16);
+const atlas = loadImage(Atlas);
 
 let destinationContext = cameraContext;
 let sourceContext = atlasContext;
 
-const atlas = loadImage(Atlas);
-
-const offscreenCanvas = document.createElement("canvas");
-offscreenCanvas.width = 16;
-offscreenCanvas.height = 16;
-const offscreenContext = offscreenCanvas.getContext("2d") as CanvasRenderingContext2D;
+function createCanvas(w: number, h: number, id: string | null = null): [HTMLCanvasElement, CanvasRenderingContext2D] {
+    const canvas = (id == null ? createElement("canvas") : getElementById(id)) as HTMLCanvasElement;
+    canvas.width = w;
+    canvas.height = h;
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    return [canvas, context];
+}
 
 export function drawRect(rectangle: Rectangle, color: string) {
     destinationContext.save();
     destinationContext.translate(0.5, 0.5);
     destinationContext.lineWidth = 1;
     destinationContext.strokeStyle = color;
-    destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
     destinationContext.restore();
 }
 
@@ -86,7 +74,7 @@ export function drawPattern(key: Sprite, rectangle: Rectangle) {
     destinationContext.translate(rectangle.x, rectangle.y);
     if (pattern == null) throw new Error("Error creating pattern");
     destinationContext.fillStyle = pattern;
-    destinationContext.fillRect(0, 0, rectangle.width, rectangle.height);
+    destinationContext.fillRect(0, 0, rectangle.w, rectangle.h);
     destinationContext.restore();
 }
 
@@ -98,8 +86,8 @@ export function drawText(text: string) {
 export function cameraRender(camera: Camera.Camera) {
     const cx = floor(camera.x);
     const cy = round(camera.y);
-    destinationContext.drawImage(staticCanvas, cx, cy, camera.width, camera.height, 0, 0, camera.width, camera.height);
-    destinationContext.drawImage(playerCanvas, cx, cy, camera.width, camera.height, 0, 0, camera.width, camera.height);
+    destinationContext.drawImage(staticCanvas, cx, cy, camera.w, camera.h, 0, 0, camera.w, camera.h);
+    destinationContext.drawImage(playerCanvas, cx, cy, camera.w, camera.h, 0, 0, camera.w, camera.h);
 }
 
 export function render() {

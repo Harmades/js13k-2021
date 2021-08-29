@@ -15,8 +15,8 @@ export function spawn(position: Vector, alongVector: Vector) {
     bullets.push({
         x: position.x,
         y: position.y,
-        height: spriteHeight,
-        width: spriteWidth,
+        h: spriteHeight,
+        w: spriteWidth,
         currentLifetime: 0,
         alongVector: alongVector
     });

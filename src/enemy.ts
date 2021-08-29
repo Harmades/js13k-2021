@@ -2,7 +2,7 @@ import { Rectangle } from "./rectangle";
 import { createCounter } from "./animation";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
-import { abs, sign } from "./math";
+import { abs, sign } from "./alias";
 import { draw, Sprite } from "./renderer";
 import { player, playerDie } from "./player";
 

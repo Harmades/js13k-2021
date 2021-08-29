@@ -2,7 +2,7 @@ import Level from "../asset/lvl_test.json";
 import { platforms } from "./platform";
 import { enemies } from "./enemy";
 import { zero } from "./vector";
-import { floor } from "./math";
+import { floor } from "./alias";
 import { cows } from "./cow";
 
 export function load() {
@@ -18,8 +18,8 @@ export function load() {
             platforms.push({
                 x: x * 16,
                 y: y * 16,
-                width: 16,
-                height: 16,
+                w: 16,
+                h: 16,
                 collision: collision,
                 type: id == 18 ? "floor" : id == 19 ? "wall" : "spikes"
             });
@@ -28,8 +28,8 @@ export function load() {
             enemies.push({
                 x: x * 16,
                 y: y * 16,
-                width: 16,
-                height: 16,
+                w: 16,
+                h: 16,
                 flipped: false,
                 patrol: [],
                 speed: zero(),
@@ -41,8 +41,8 @@ export function load() {
             cows.push({
                 x: x * 16,
                 y: y * 16,
-                width: 16,
-                height: 16,
+                w: 16,
+                h: 16,
                 collected: false
             })
         }

@@ -8,8 +8,8 @@ export type Camera = Rectangle
 const camera: Camera = {
     x: 0,
     y: 0,
-    width: Settings.cameraWidth,
-    height: Settings.cameraHeight,
+    w: Settings.cameraWidth,
+    h: Settings.cameraHeight,
 }
 
 export function update(delta: number) {
@@ -22,6 +22,6 @@ export function render() {
 
 export function track(player: Player) {
     const playerCenter = getCenter(player);
-    camera.x = playerCenter.x - camera.width / 2;
-    camera.y = playerCenter.y - camera.height / 2;
+    camera.x = playerCenter.x - camera.w / 2;
+    camera.y = playerCenter.y - camera.h / 2;
 }

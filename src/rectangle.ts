@@ -1,13 +1,13 @@
 import { Vector } from "./vector";
 
 export type Rectangle = Vector & {
-    width: number;
-    height: number;
+    w: number;
+    h: number;
 }
 
 export function getCenter(rectangle: Rectangle): Vector {
     return {
-        x: rectangle.x + rectangle.width / 2,
-        y: rectangle.y + rectangle.height / 2
+        x: rectangle.x + rectangle.w / 2,
+        y: rectangle.y + rectangle.h / 2
     };
 }

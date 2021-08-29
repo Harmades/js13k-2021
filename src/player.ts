@@ -38,8 +38,8 @@ const dashKeyPress = createReleasedKeyPress("shift");
 export const player: Player = {
     x: Settings.playerSpawnX,
     y: Settings.playerSpawnY,
-    width: 15,
-    height: 16,
+    w: 15,
+    h: 16,
     speed: { x: 0, y: 0 },
     state: "airborne",
     combatState: "human",
