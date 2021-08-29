@@ -1,8 +1,9 @@
+import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
-import { Enemy } from "./enemy";
+import { bulletHit, Enemy, enemyCollide } from "./enemy";
 import { abs, sign } from "./math";
 import { Platform } from "./platform";
-import { collect, collide, die, Player } from "./player";
+import { collect, collide, playerDie } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
@@ -24,28 +25,35 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
     };
 }
 
-export function update(player: Player, platforms: Platform[], enemies: Enemy[]) {
-    for (const platform of getEntitiesNearPlayer(player, platforms)) {
+export function update(player: Rectangle, platforms: Platform[], enemies: Enemy[]) {
+    for (const platform of getEntitiesNearEntity(player, platforms)) {
         if (!platform.collision) continue;
         const collision = getCollision(player, platform)
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
-            if (platform.type == "spikes") die();
+            if (platform.type == "spikes") playerDie();
             else collide(translationVector);
         }
     }
 
-    for (const enemy of getEntitiesNearPlayer(player, enemies)) {
+    for (const enemy of getEntitiesNearEntity(player, enemies)) {
         const collision = getCollision(player, enemy)
         if (collision != null) {
             const translationVector = getTranslationVector(player, enemy, collision);
             add(player, translationVector);
-            die();
+            enemyCollide(enemy);
+        }
+        for (const bullet of getEntitiesNearEntity(enemy, bullets)) {
+            const enemyBulletCollision = getCollision(enemy, bullet);
+            if (enemyBulletCollision != null) {
+                bulletHit(enemy);
+                bulletCollide(bullet);
+            }
         }
     }
 
-    for (const cow of getEntitiesNearPlayer(player, cows)) {
+    for (const cow of getEntitiesNearEntity(player, cows)) {
         const collision = getCollision(player, cow);
         if (collision != null && !cow.collected) {
             collect();
@@ -54,17 +62,17 @@ export function update(player: Player, platforms: Platform[], enemies: Enemy[]) 
     }
 }
 
-function getEntitiesNearPlayer<T extends Rectangle>(player: Player, rectangles: T[]) {
+function getEntitiesNearEntity<T extends Rectangle>(entity: Rectangle, possibleCollisionEntities: T[]) {
     const closePlatforms = [];
-    for (const rectangle of rectangles) {
-        if (abs(rectangle.x - player.x) <= Settings.playerCollisionGrid && abs(rectangle.y - player.y) <= Settings.playerCollisionGrid) {
-            closePlatforms.push(rectangle);
+    for (const possibleCollisionEntity of possibleCollisionEntities) {
+        if (abs(possibleCollisionEntity.x - entity.x) <= Settings.playerCollisionGrid && abs(possibleCollisionEntity.y - entity.y) <= Settings.playerCollisionGrid) {
+            closePlatforms.push(possibleCollisionEntity);
         }
     }
     return closePlatforms;
 }
 
-function getTranslationVector(player: Player, rectangle: Rectangle, collision: Collision): Vector {
+function getTranslationVector(player: Rectangle, rectangle: Rectangle, collision: Collision): Vector {
     const playerCenter = getCenter(player);
     const platformCenter = getCenter(rectangle);
     const xSign = sign(playerCenter.x - platformCenter.x);

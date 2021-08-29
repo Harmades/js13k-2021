@@ -123,7 +123,7 @@ export function collide(translationVector: Vector) {
     if (translationVector.y != 0) player.speed.y = 0;
 }
 
-export function die() {
+export function playerDie() {
     player.speed = zero();
     player.x = currentSpawn.x;
     player.y = currentSpawn.y;

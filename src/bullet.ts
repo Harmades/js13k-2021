@@ -5,7 +5,7 @@ import { Vector } from "./vector";
 
 export type Bullet = Rectangle & { currentLifetime: number, alongVector: Vector }
 
-let bullets: Bullet[] = [];
+export let bullets: Bullet[] = [];
 
 const sprite = "bullet.png";
 const spriteHeight = 6;
@@ -26,6 +26,10 @@ export function render() {
     for (const bullet of bullets) {
         draw(sprite, bullet);
     }
+}
+
+export function bulletCollide(bullet: Bullet) {
+    bullet.currentLifetime = Settings.bulletLifetime;
 }
 
 export function update(delta: number) {

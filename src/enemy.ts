@@ -4,6 +4,7 @@ import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { abs, sign } from "./math";
 import { draw, Sprite } from "./renderer";
+import { player, playerDie } from "./player";
 
 export type Enemy = Rectangle & {
     speed: Vector,
@@ -16,7 +17,7 @@ export type Enemy = Rectangle & {
 export type EnemyType = "human" | "butcher" | "shield";
 export type EnemyState = "idle" | "running";
 
-export const enemies: Enemy[] = []
+export let enemies: Enemy[] = []
 
 const enemyHumanIdleSprite = "enemy_human_butcher.png";
 const enemyHumanWalkSprite = "enemy_human_butcher_walkframe.png";
@@ -64,6 +65,24 @@ export function update(delta: number) {
         const patrol = patrols[i];
         // patrol(delta);
     }
+}
+
+function die(enemy: Enemy) {
+    enemies = enemies.filter(e => e != enemy);
+}
+
+export function bulletHit(enemy: Enemy) {
+    if (enemy.type != "shield") die(enemy); 
+}
+
+export function dashHit(enemy: Enemy) {
+    if (enemy.type != "butcher") die(enemy);
+    else playerDie();
+}
+
+export function enemyCollide(enemy: Enemy) {
+    if (player.state == "dash") dashHit(enemy);
+    else playerDie();
 }
 
 function createPatrol(enemy: Enemy) {
