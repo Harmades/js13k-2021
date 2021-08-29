@@ -17,6 +17,7 @@ export type Sprite = keyof typeof AtlasMetadata.frames
 
 const [cameraCanvas, cameraContext] = createCanvas(Settings.cameraWidth, Settings.cameraHeight, "gameCanvas");
 const [staticCanvas, staticContext] = createCanvas(Settings.width, Settings.height);
+const [backgroundCanvas, backgroundContext] = createCanvas(Settings.width, Settings.height);
 const [playerCanvas, playerContext] = createCanvas(Settings.width, Settings.height);
 const [atlasCanvas, atlasContext] = createCanvas(Settings.width, Settings.height);
 const [offscreenCanvas, offscreenContext] = createCanvas(16, 16);
@@ -86,6 +87,7 @@ export function drawText(text: string) {
 export function cameraRender(camera: Camera.Camera) {
     const cx = floor(camera.x);
     const cy = round(camera.y);
+    destinationContext.drawImage(backgroundCanvas, round(cx * 0.4), round(cy * 0.4), camera.w, camera.h, 0, 0, camera.w, camera.h);
     destinationContext.drawImage(staticCanvas, cx, cy, camera.w, camera.h, 0, 0, camera.w, camera.h);
     destinationContext.drawImage(playerCanvas, cx, cy, camera.w, camera.h, 0, 0, camera.w, camera.h);
 }
@@ -106,9 +108,10 @@ export function render() {
 }
 
 export function staticRender() {
-    destinationContext = staticContext;
+    destinationContext = backgroundContext;
     sourceContext = atlasContext;
     Background.render();
+    destinationContext = staticContext;
     Platform.render();
 }
 
