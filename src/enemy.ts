@@ -4,18 +4,26 @@ import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { abs, sign } from "./alias";
 import { draw, Sprite } from "./renderer";
-import { player, playerDie } from "./player";
+import { player, playerDie, PlayerState } from "./player";
 
 export type Enemy = Rectangle & {
     speed: Vector,
-    state: EnemyState;
-    type: EnemyType;
+    state: number;
+    type: number;
     patrol: Vector[];
     flipped: boolean;
 }
 
-export type EnemyType = "human" | "butcher" | "shield";
-export type EnemyState = "idle" | "running";
+export const EnemyType = {
+    Human: 0,
+    Butcher: 1,
+    Shield: 2
+};
+
+export const EnemyState = {
+    Idle: 0,
+    Running: 1
+};
 
 export let enemies: Enemy[] = []
 
@@ -32,25 +40,25 @@ const patrols = enemies.map(enemy => createPatrol(enemy));
 export function render() {
     for (const enemy of enemies) {
         enemy.flipped = sign(enemy.speed.x) == 1;
-        if (enemy.type == "human") {
-            if (enemy.state == "idle") currentSprite = enemyHumanIdleSprite;
-            if (enemy.state == "running") {
+        if (enemy.type == EnemyType.Human) {
+            if (enemy.state == EnemyState.Idle) currentSprite = enemyHumanIdleSprite;
+            if (enemy.state == EnemyState.Running) {
                 if (walkCounter()) {
                     currentSprite = currentSprite == enemyHumanIdleSprite ? enemyHumanWalkSprite : enemyHumanIdleSprite;
                 }
             }
         }
-        if (enemy.type == "butcher") {
-            if (enemy.state == "idle") currentSprite = enemyButcherIdleSprite;
-            if (enemy.state == "running") {
+        if (enemy.type == EnemyType.Butcher) {
+            if (enemy.state == EnemyState.Idle) currentSprite = enemyButcherIdleSprite;
+            if (enemy.state == EnemyState.Running) {
                 if (walkCounter()) {
                     currentSprite = currentSprite == enemyButcherIdleSprite ? enemyButcherWalkSprite : enemyButcherIdleSprite;
                 }
             }
         }
-        if (enemy.type == "shield") {
-            if (enemy.state == "idle") currentSprite = enemyShieldIdleSprite;
-            if (enemy.state == "running") {
+        if (enemy.type == EnemyType.Shield) {
+            if (enemy.state == EnemyState.Idle) currentSprite = enemyShieldIdleSprite;
+            if (enemy.state == EnemyState.Running) {
                 if (walkCounter()) {
                     currentSprite = currentSprite == enemyShieldIdleSprite ? enemyShieldWalkSprite : enemyShieldIdleSprite;
                 }
@@ -72,16 +80,16 @@ function die(enemy: Enemy) {
 }
 
 export function bulletHit(enemy: Enemy) {
-    if (enemy.type != "shield") die(enemy); 
+    if (enemy.type != EnemyType.Shield) die(enemy); 
 }
 
 export function dashHit(enemy: Enemy) {
-    if (enemy.type != "butcher") die(enemy);
+    if (enemy.type != EnemyType.Butcher) die(enemy);
     else playerDie();
 }
 
 export function enemyCollide(enemy: Enemy) {
-    if (player.state == "dash") dashHit(enemy);
+    if (player.state == PlayerState.Dash) dashHit(enemy);
     else playerDie();
 }
 

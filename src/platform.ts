@@ -1,11 +1,15 @@
 import { Rectangle } from "./rectangle";
 import { draw } from "./renderer";
 
-export type PlatformType = "floor" | "wall" | "spikes";
+export const PlatformType = {
+    Floor: 0,
+    Wall: 1,
+    Spikes: 2
+};
 
 export type Platform = Rectangle & {
     collision: boolean,
-    type: PlatformType
+    type: number
 }
 
 const floorSprite = "floor_tile.png";
@@ -19,7 +23,7 @@ export function update(delta: number) {
 
 export function render() {
     for (const platform of platforms) {
-        const sprite = platform.type == "floor" ? floorSprite : platform.type == "wall" ? innerSprite : spikesSprite;
+        const sprite = platform.type == PlatformType.Floor ? floorSprite : platform.type == PlatformType.Wall ? innerSprite : spikesSprite;
         draw(sprite, platform);
     }
 }

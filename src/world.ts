@@ -1,6 +1,6 @@
 import Level from "../asset/lvl_test.json";
-import { platforms } from "./platform";
-import { enemies } from "./enemy";
+import { platforms, PlatformType } from "./platform";
+import { enemies, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
 import { cows } from "./cow";
@@ -21,7 +21,7 @@ export function load() {
                 w: 16,
                 h: 16,
                 collision: collision,
-                type: id == 18 ? "floor" : id == 19 ? "wall" : "spikes"
+                type: id == 18 ? PlatformType.Floor : id == 19 ? PlatformType.Wall : PlatformType.Spikes
             });
         }
         if (id == 7 || id == 8 || id == 9) {
@@ -33,8 +33,8 @@ export function load() {
                 flipped: false,
                 patrol: [],
                 speed: zero(),
-                state: "idle",
-                type: id == 7 ? "human" : id == 8 ? "butcher" : "shield"
+                state: EnemyState.Idle,
+                type: id == 7 ? EnemyType.Human : id == 8 ? EnemyType.Butcher : EnemyType.Shield
             })
         }
         if (id == 10) {

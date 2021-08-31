@@ -9,13 +9,23 @@ import { track } from "./camera";
 
 export type Player = Rectangle & {
     speed: Vector;
-    state: PlayerState;
-    combatState: PlayerCombatState;
+    state: number;
+    combatState: number;
     cows: number;
 }
 
-export type PlayerState = "idle" | "running" | "coyote" | "airborne" | "dash"
-export type PlayerCombatState = "human" | "cow"
+export const PlayerState = {
+    Idle: 0,
+    Running: 1,
+    Coyote: 2,
+    Airborne: 3,
+    Dash: 4
+};
+
+export const PlayerCombatState = {
+    Human: 0,
+    Cow: 1
+}
 
 const humanIdleSprite = "charac_cowboy.png";
 const humanWalkSprite = "charac_cowboy_walkframe.png";
@@ -41,23 +51,23 @@ export const player: Player = {
     w: 15,
     h: 16,
     speed: { x: 0, y: 0 },
-    state: "airborne",
-    combatState: "human",
+    state: PlayerState.Airborne,
+    combatState: PlayerCombatState.Human,
     cows: 0
 }
 
 export function render() {
-    const idleSprite = player.combatState == "human" ? humanIdleSprite : cowIdleSprite;
-    const walkSprite = player.combatState == "human" ? humanWalkSprite : cowWalkSprite;
-    if (player.state == "running") {
+    const idleSprite = player.combatState == PlayerCombatState.Human ? humanIdleSprite : cowIdleSprite;
+    const walkSprite = player.combatState == PlayerCombatState.Human ? humanWalkSprite : cowWalkSprite;
+    if (player.state == PlayerState.Running) {
         if (walkCounter()) {
             currentSprite = currentSprite == idleSprite ? walkSprite : idleSprite;
         }
     }
-    if (player.state == "idle" || player.state == "airborne" || player.state == "coyote") {
+    if (player.state == PlayerState.Idle || player.state == PlayerState.Airborne || player.state == PlayerState.Coyote) {
         currentSprite = idleSprite;
     }
-    if (player.state == "dash") {
+    if (player.state == PlayerState.Dash) {
         currentSprite = cowDashSprite;
     }
     if (player.speed.x != 0) flipped = player.speed.x < 0;
@@ -65,29 +75,29 @@ export function render() {
 }
 
 export function update(delta: number) {
-    if (player.state == "idle" && player.speed.x != 0) player.state = "running";
-    if (player.state == "idle" && player.speed.y != 0) player.state = "airborne";
-    if (player.state == "running" && player.speed.y > 0) player.state = "coyote";
-    if (player.state == "running" && player.speed.y < 0) player.state = "airborne";
-    if (player.state == "coyote" && player.speed.y < 0) player.state = "airborne";
-    if (player.state == "coyote" && player.speed.y > 0) {
+    if (player.state == PlayerState.Idle && player.speed.x != 0) player.state = PlayerState.Running;
+    if (player.state == PlayerState.Idle && player.speed.y != 0) player.state = PlayerState.Airborne;
+    if (player.state == PlayerState.Running && player.speed.y > 0) player.state = PlayerState.Coyote;
+    if (player.state == PlayerState.Running && player.speed.y < 0) player.state = PlayerState.Airborne;
+    if (player.state == PlayerState.Coyote && player.speed.y < 0) player.state = PlayerState.Airborne;
+    if (player.state == PlayerState.Coyote && player.speed.y > 0) {
         if (coyoteCounter()) {
-            player.state = "airborne";
+            player.state = PlayerState.Airborne;
         }
     }
-    if (player.state == "running" && player.speed.x == 0 && player.speed.y == 0) player.state = "idle";
-    if (player.state == "airborne" && currentGravity == 0 && player.speed.y == 0) {
-        player.state = "running";
+    if (player.state == PlayerState.Running && player.speed.x == 0 && player.speed.y == 0) player.state = PlayerState.Idle;
+    if (player.state == PlayerState.Airborne && currentGravity == 0 && player.speed.y == 0) {
+        player.state = PlayerState.Running;
         dashExhausted = false;
     }
-    if (player.state == "dash" && dashCounter()) {
-        player.state = "airborne";
+    if (player.state == PlayerState.Dash && dashCounter()) {
+        player.state = PlayerState.Airborne;
         dashExhausted = true;
     }
 
     player.speed.y += currentGravity * delta;
-    if (input.up && player.state != "airborne") player.speed.y = -Settings.playerSpeedY;
-    if (player.state != "dash") {
+    if (input.up && player.state != PlayerState.Airborne) player.speed.y = -Settings.playerSpeedY;
+    if (player.state != PlayerState.Dash) {
         if (input.left) player.speed.x = -Settings.playerSpeedX;
         else if (input.right) player.speed.x = Settings.playerSpeedX;
         else player.speed.x = 0;
@@ -95,15 +105,15 @@ export function update(delta: number) {
         player.speed.y = 0;
     }
 
-    if (player.combatState == "human" && shootKeyPress()) {
+    if (player.combatState == PlayerCombatState.Human && shootKeyPress()) {
         const xOffset = flipped ? -8 : Settings.playerBulletSpawnOffsetX;
         spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: flipped ? -1 : 1, y: 0 });
     }
-    if (player.combatState == "cow" && dashKeyPress() && !dashExhausted) {
+    if (player.combatState == PlayerCombatState.Cow && dashKeyPress() && !dashExhausted) {
         player.speed.x = flipped ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
-        player.state = "dash";
+        player.state = PlayerState.Dash;
     }
-    if (morphKeyPress()) player.combatState = player.combatState == "human" ? "cow" : "human";
+    if (morphKeyPress()) player.combatState = player.combatState == PlayerCombatState.Human ? PlayerCombatState.Cow : PlayerCombatState.Human;
 
     player.x += player.speed.x * delta;
     player.y += player.speed.y * delta;

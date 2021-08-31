@@ -7,6 +7,7 @@ import * as Platform from "./platform";
 import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
+import { floor } from "./alias";
 
 World.load();
 
@@ -21,7 +22,7 @@ export function loop(tFrame: number) {
 
     if (tFrame > nextTick) {
         var elapsed = tFrame - lastTick;
-        numTicks = Math.floor(elapsed / tickLength);
+        numTicks = floor(elapsed / tickLength);
     }
     
     for (var i = 0; i < numTicks; i++) {

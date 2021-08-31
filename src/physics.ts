@@ -2,7 +2,7 @@ import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
 import { bulletHit, Enemy, enemyCollide } from "./enemy";
 import { abs, sign } from "./alias";
-import { Platform } from "./platform";
+import { Platform, PlatformType } from "./platform";
 import { collect, collide, playerDie } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
@@ -32,7 +32,7 @@ export function update(player: Rectangle, platforms: Platform[], enemies: Enemy[
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
-            if (platform.type == "spikes") playerDie();
+            if (platform.type == PlatformType.Spikes) playerDie();
             else collide(translationVector);
         }
     }
