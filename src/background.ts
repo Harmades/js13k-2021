@@ -2,9 +2,20 @@ import { floor } from "./alias";
 import { draw, drawPattern } from "./renderer";
 import { Settings } from "./settings";
 
-const emptySprite = "nostars.png";
-const stars1Sprite = "stars1.png";
-const stars2Sprite = "stars2.png";
+const emptySprite = {
+    x: 4 * Settings.tileSize,
+    y: 4 * Settings.tileSize
+};
+
+const stars1Sprite = {
+    x: 5 * Settings.tileSize,
+    y: 4 * Settings.tileSize
+};
+
+const stars2Sprite = {
+    x: 5 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
 
 export function render() {
     drawPattern(emptySprite, { x: 0, y: 0, w: Settings.width, h: Settings.height });
@@ -13,6 +24,6 @@ export function render() {
         const x = i % 119;
         const y = floor(i / 119);
         const sprite = i % 2 > 0 ? emptySprite : stars2Sprite;
-        draw(sprite, { x: x * 16, y: y * 16});
+        draw(sprite, { x: x * Settings.tileSize, y: y * Settings.tileSize});
     }
 }

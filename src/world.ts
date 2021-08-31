@@ -4,6 +4,7 @@ import { enemies, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
 import { cows } from "./cow";
+import { Settings } from "./settings";
 
 export function load() {
     const layer = Level.layers[1];
@@ -16,20 +17,20 @@ export function load() {
             const adjacentTiles = getAdjacentTiles(i, data, layer.width, layer.height);
             const collision = adjacentTiles.some(tileId => tileId == 0);
             platforms.push({
-                x: x * 16,
-                y: y * 16,
-                w: 16,
-                h: 16,
+                x: x * Settings.tileSize,
+                y: y * Settings.tileSize,
+                w: Settings.tileSize,
+                h: Settings.tileSize,
                 collision: collision,
                 type: id == 18 ? PlatformType.Floor : id == 19 ? PlatformType.Wall : PlatformType.Spikes
             });
         }
         if (id == 7 || id == 8 || id == 9) {
             enemies.push({
-                x: x * 16,
-                y: y * 16,
-                w: 16,
-                h: 16,
+                x: x * Settings.tileSize,
+                y: y * Settings.tileSize,
+                w: Settings.tileSize,
+                h: Settings.tileSize,
                 flipped: false,
                 patrol: [],
                 speed: zero(),
@@ -39,10 +40,10 @@ export function load() {
         }
         if (id == 10) {
             cows.push({
-                x: x * 16,
-                y: y * 16,
-                w: 16,
-                h: 16,
+                x: x * Settings.tileSize,
+                y: y * Settings.tileSize,
+                w: Settings.tileSize,
+                h: Settings.tileSize,
                 collected: false
             })
         }

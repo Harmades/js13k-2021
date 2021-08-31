@@ -1,5 +1,6 @@
 import { Rectangle } from "./rectangle";
 import { draw } from "./renderer";
+import { Settings } from "./settings";
 
 export type Cow = Rectangle & {
     collected: boolean;
@@ -7,9 +8,14 @@ export type Cow = Rectangle & {
 
 export const cows: Cow[] = [];
 
+const sprite = {
+    x: 5 * Settings.tileSize,
+    y: 0
+}
+
 export function render() {
     for (const cow of cows) {
-        if (!cow.collected) draw("npc_cow.png", cow);
+        if (!cow.collected) draw(sprite, cow);
     }
 }
 

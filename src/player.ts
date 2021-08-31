@@ -1,6 +1,6 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { draw, Sprite } from "./renderer";
+import { draw } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
@@ -27,12 +27,27 @@ export const PlayerCombatState = {
     Cow: 1
 }
 
-const humanIdleSprite = "charac_cowboy.png";
-const humanWalkSprite = "charac_cowboy_walkframe.png";
-const cowIdleSprite = "charac_cow.png";
-const cowWalkSprite = "charac_cow_walkframe.png";
-const cowDashSprite = "charac_cow_dashframe.png";
-let currentSprite: Sprite = humanIdleSprite;
+const humanIdleSprite = {
+    x: 4 * Settings.tileSize,
+    y: 1 * Settings.tileSize
+};
+const humanWalkSprite = {
+    x: 0 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
+const cowIdleSprite = {
+    x: 0 * Settings.tileSize,
+    y: 1 * Settings.tileSize
+};
+const cowWalkSprite = {
+    x: 3 * Settings.tileSize,
+    y: 1 * Settings.tileSize
+};
+const cowDashSprite = {
+    x: 1 * Settings.tileSize,
+    y: 1 * Settings.tileSize
+};
+let currentSprite = humanIdleSprite;
 
 let currentGravity = 0;
 let flipped = false;
@@ -49,7 +64,7 @@ export const player: Player = {
     x: Settings.playerSpawnX,
     y: Settings.playerSpawnY,
     w: 15,
-    h: 16,
+    h: Settings.tileSize,
     speed: { x: 0, y: 0 },
     state: PlayerState.Airborne,
     combatState: PlayerCombatState.Human,
@@ -59,6 +74,7 @@ export const player: Player = {
 export function render() {
     const idleSprite = player.combatState == PlayerCombatState.Human ? humanIdleSprite : cowIdleSprite;
     const walkSprite = player.combatState == PlayerCombatState.Human ? humanWalkSprite : cowWalkSprite;
+    let span = 1;
     if (player.state == PlayerState.Running) {
         if (walkCounter()) {
             currentSprite = currentSprite == idleSprite ? walkSprite : idleSprite;
@@ -69,9 +85,10 @@ export function render() {
     }
     if (player.state == PlayerState.Dash) {
         currentSprite = cowDashSprite;
+        span = 2;
     }
     if (player.speed.x != 0) flipped = player.speed.x < 0;
-    draw(currentSprite, player, flipped);
+    draw(currentSprite, player, flipped, span * Settings.tileSize);
 }
 
 export function update(delta: number) {

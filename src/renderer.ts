@@ -10,17 +10,14 @@ import * as Cow from "./cow";
 import * as Ui from "./ui";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
-import AtlasMetadata from "../asset/atlas.json";
 import { createElement, floor, getElementById, round } from "./alias";
-
-export type Sprite = keyof typeof AtlasMetadata.frames
 
 const [cameraCanvas, cameraContext] = createCanvas(Settings.cameraWidth, Settings.cameraHeight, "gameCanvas");
 const [staticCanvas, staticContext] = createCanvas(Settings.width, Settings.height);
 const [backgroundCanvas, backgroundContext] = createCanvas(Settings.width, Settings.height);
 const [playerCanvas, playerContext] = createCanvas(Settings.width, Settings.height);
 const [atlasCanvas, atlasContext] = createCanvas(Settings.width, Settings.height);
-const [offscreenCanvas, offscreenContext] = createCanvas(16, 16);
+const [offscreenCanvas, offscreenContext] = createCanvas(Settings.tileSize, Settings.tileSize);
 const atlas = loadImage(Atlas);
 
 let destinationContext = cameraContext;
@@ -44,7 +41,7 @@ export function drawRect(rectangle: Rectangle, color: string) {
 }
 
 function loadImage(path: string): HTMLImageElement {
-    const image = new Image(16, 16);
+    const image = new Image(Settings.tileSize, Settings.tileSize);
     image.src = path;
     image.onload = () => {
         atlasRender();
@@ -53,29 +50,27 @@ function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function draw(key: Sprite, vector: Vector, flip: boolean = false) {
+export function draw(atlasPosition: Vector, vector: Vector, flip: boolean = false, width: number = Settings.tileSize, height: number = Settings.tileSize) {
     if (!atlas.complete) return;
-    const frame = AtlasMetadata.frames[key].frame;
     destinationContext.save();
     destinationContext.translate(round(vector.x), round(vector.y));
     if (flip) {
-        destinationContext.translate(16, 0);
+        destinationContext.translate(Settings.tileSize, 0);
         destinationContext.scale(-1, 1);
     }
-    destinationContext.drawImage(sourceContext.canvas, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+    destinationContext.drawImage(sourceContext.canvas, atlasPosition.x, atlasPosition.y, width, height, 0, 0, width, height);
     destinationContext.restore();
 }
 
-export function drawPattern(key: Sprite, rectangle: Rectangle) {
+export function drawPattern(atlasPosition: Vector, destination: Rectangle) {
     if (!atlas.complete) return;
-    const frame = AtlasMetadata.frames[key].frame;
-    offscreenContext.drawImage(atlas, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+    offscreenContext.drawImage(atlas, atlasPosition.x, atlasPosition.y, Settings.tileSize, Settings.tileSize, 0, 0, Settings.tileSize, Settings.tileSize);
     const pattern = destinationContext.createPattern(offscreenCanvas, "repeat");
     destinationContext.save();
-    destinationContext.translate(rectangle.x, rectangle.y);
+    destinationContext.translate(destination.x, destination.y);
     if (pattern == null) throw new Error("Error creating pattern");
     destinationContext.fillStyle = pattern;
-    destinationContext.fillRect(0, 0, rectangle.w, rectangle.h);
+    destinationContext.fillRect(0, 0, destination.w, destination.h);
     destinationContext.restore();
 }
 

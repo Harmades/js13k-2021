@@ -1,5 +1,6 @@
 import { Rectangle } from "./rectangle";
 import { draw } from "./renderer";
+import { Settings } from "./settings";
 
 export const PlatformType = {
     Floor: 0,
@@ -12,9 +13,18 @@ export type Platform = Rectangle & {
     type: number
 }
 
-const floorSprite = "floor_tile.png";
-const innerSprite = "intern_floor_tile.png";
-const spikesSprite = "spikes.png"
+const floorSprite = {
+    x: 0 * Settings.tileSize,
+    y: 4 * Settings.tileSize
+};
+const innerSprite = {
+    x: 1 * Settings.tileSize,
+    y: 4 * Settings.tileSize
+};
+const spikesSprite = {
+    x: 5 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
 
 export let platforms: Platform[] = [];
 

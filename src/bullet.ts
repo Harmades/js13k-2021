@@ -7,16 +7,21 @@ export type Bullet = Rectangle & { currentLifetime: number, alongVector: Vector 
 
 export let bullets: Bullet[] = [];
 
-const sprite = "bullet.png";
-const spriteHeight = 6;
-const spriteWidth = 8;
+const h = 6;
+const w = 8;
+
+const sprite = {
+    x: 4 * Settings.tileSize,
+    y: 0 + Settings.tileSize - h
+};
+
 
 export function spawn(position: Vector, alongVector: Vector) {
     bullets.push({
         x: position.x,
         y: position.y,
-        h: spriteHeight,
-        w: spriteWidth,
+        h: h,
+        w: w,
         currentLifetime: 0,
         alongVector: alongVector
     });
@@ -24,7 +29,7 @@ export function spawn(position: Vector, alongVector: Vector) {
 
 export function render() {
     for (const bullet of bullets) {
-        draw(sprite, bullet);
+        draw(sprite, bullet, false, w, h);
     }
 }
 

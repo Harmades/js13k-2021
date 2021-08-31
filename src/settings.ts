@@ -4,6 +4,8 @@ export const Settings = {
     cameraWidth: 240,
     cameraHeight: 160,
 
+    tileSize: 16,
+
     width: 119 * 16,
     height: 85 * 16,
 

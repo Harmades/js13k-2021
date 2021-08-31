@@ -3,7 +3,7 @@ import { createCounter } from "./animation";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { abs, sign } from "./alias";
-import { draw, Sprite } from "./renderer";
+import { draw } from "./renderer";
 import { player, playerDie, PlayerState } from "./player";
 
 export type Enemy = Rectangle & {
@@ -27,13 +27,33 @@ export const EnemyState = {
 
 export let enemies: Enemy[] = []
 
-const enemyHumanIdleSprite = "enemy_human_butcher.png";
-const enemyHumanWalkSprite = "enemy_human_butcher_walkframe.png";
-const enemyButcherIdleSprite = "enemy_butcher.png";
-const enemyButcherWalkSprite = "enemy_butcher_walkframe.png";
-const enemyShieldIdleSprite = "enemy_shield_butcher.png";
-const enemyShieldWalkSprite = "enemy_shield_butcher_walkframe.png";
-let currentSprite: Sprite = enemyButcherIdleSprite;
+const enemyHumanIdleSprite = {
+    x: 4 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
+const enemyHumanWalkSprite = {
+    x: 0 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+const enemyButcherIdleSprite = {
+    x: 1 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+const enemyButcherWalkSprite = {
+    x: 2 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+const enemyShieldIdleSprite = {
+    x: 3 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+const enemyShieldWalkSprite = {
+    x: 4 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+let currentSprite = enemyHumanIdleSprite;
+
+
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const patrols = enemies.map(enemy => createPatrol(enemy));
 
