@@ -32,12 +32,14 @@ function createCanvas(w: number, h: number, id: string | null = null): [HTMLCanv
 }
 
 export function drawRect(rectangle: Rectangle, color: string) {
-    destinationContext.save();
-    destinationContext.translate(0.5, 0.5);
-    destinationContext.lineWidth = 1;
-    destinationContext.strokeStyle = color;
-    destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
-    destinationContext.restore();
+    destinationContext.fillStyle = color;
+    destinationContext.fillRect(round(rectangle.x), round(rectangle.y), rectangle.w, rectangle.h);
+    // destinationContext.save();
+    // destinationContext.translate(0.5, 0.5);
+    // destinationContext.lineWidth = 1;
+    // destinationContext.strokeStyle = color;
+    // destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+    // destinationContext.restore();
 }
 
 function loadImage(path: string): HTMLImageElement {
@@ -50,9 +52,10 @@ function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function draw(atlasPosition: Vector, vector: Vector, flip: boolean = false, width: number = Settings.tileSize, height: number = Settings.tileSize) {
+export function draw(atlasPosition: Vector, vector: Vector, flip: boolean = false, width: number = Settings.tileSize, height: number = Settings.tileSize, alpha: number = 1) {
     if (!atlas.complete) return;
     destinationContext.save();
+    destinationContext.globalAlpha = alpha;
     destinationContext.translate(round(vector.x), round(vector.y));
     if (flip) {
         destinationContext.translate(Settings.tileSize, 0);
@@ -68,7 +71,7 @@ export function drawPattern(atlasPosition: Vector, destination: Rectangle) {
     const pattern = destinationContext.createPattern(offscreenCanvas, "repeat");
     destinationContext.save();
     destinationContext.translate(destination.x, destination.y);
-    if (pattern == null) throw new Error("Error creating pattern");
+    if (pattern == null) throw new Error();
     destinationContext.fillStyle = pattern;
     destinationContext.fillRect(0, 0, destination.w, destination.h);
     destinationContext.restore();

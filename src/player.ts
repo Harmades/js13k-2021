@@ -12,6 +12,9 @@ export type Player = Rectangle & {
     state: number;
     combatState: number;
     cows: number;
+    sprite: Vector,
+    flipped: boolean,
+    span: number
 }
 
 export const PlayerState = {
@@ -47,10 +50,7 @@ const cowDashSprite = {
     x: 1 * Settings.tileSize,
     y: 1 * Settings.tileSize
 };
-let currentSprite = humanIdleSprite;
-
 let currentGravity = 0;
-let flipped = false;
 let dashExhausted = false;
 let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
 const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
@@ -59,6 +59,8 @@ const dashCounter = createCounter(Settings.playerDashFrames);
 const morphKeyPress = createReleasedKeyPress("m");
 const shootKeyPress = createReleasedKeyPress("space");
 const dashKeyPress = createReleasedKeyPress("shift");
+const trails: Player[] = [];
+let trailCounter = 0;
 
 export const player: Player = {
     x: Settings.playerSpawnX,
@@ -68,27 +70,35 @@ export const player: Player = {
     speed: { x: 0, y: 0 },
     state: PlayerState.Airborne,
     combatState: PlayerCombatState.Human,
-    cows: 0
+    cows: 0,
+    sprite: humanIdleSprite,
+    flipped: false,
+    span: 1
 }
 
 export function render() {
     const idleSprite = player.combatState == PlayerCombatState.Human ? humanIdleSprite : cowIdleSprite;
     const walkSprite = player.combatState == PlayerCombatState.Human ? humanWalkSprite : cowWalkSprite;
-    let span = 1;
+    player.span = 1;
     if (player.state == PlayerState.Running) {
         if (walkCounter()) {
-            currentSprite = currentSprite == idleSprite ? walkSprite : idleSprite;
+            player.sprite = player.sprite == idleSprite ? walkSprite : idleSprite;
         }
     }
     if (player.state == PlayerState.Idle || player.state == PlayerState.Airborne || player.state == PlayerState.Coyote) {
-        currentSprite = idleSprite;
+        player.sprite = idleSprite;
     }
     if (player.state == PlayerState.Dash) {
-        currentSprite = cowDashSprite;
-        span = 2;
+        player.sprite = cowDashSprite;
+        player.span = 2;
     }
-    if (player.speed.x != 0) flipped = player.speed.x < 0;
-    draw(currentSprite, player, flipped, span * Settings.tileSize);
+    if (player.speed.x != 0) player.flipped = player.speed.x < 0;
+    trailCounter++;
+    if (trails.length == 5) trails.shift();
+    trails.filter(trail => trail.state == PlayerState.Airborne && player.speed.y < 0 || trail.state == PlayerState.Dash)
+        .map((trail, i) => draw(trail.sprite, trail, trail.flipped, trail.span * Settings.tileSize, Settings.tileSize, i / (trails.length - 1)));
+    trails.push({ ...player });
+    draw(player.sprite, player, player.flipped, player.span * Settings.tileSize, Settings.tileSize);
 }
 
 export function update(delta: number) {
@@ -113,7 +123,9 @@ export function update(delta: number) {
     }
 
     player.speed.y += currentGravity * delta;
-    if (input.up && player.state != PlayerState.Airborne) player.speed.y = -Settings.playerSpeedY;
+    if (input.up && player.state != PlayerState.Airborne) {
+        player.speed.y = -Settings.playerSpeedY;
+    }
     if (player.state != PlayerState.Dash) {
         if (input.left) player.speed.x = -Settings.playerSpeedX;
         else if (input.right) player.speed.x = Settings.playerSpeedX;
@@ -123,11 +135,11 @@ export function update(delta: number) {
     }
 
     if (player.combatState == PlayerCombatState.Human && shootKeyPress()) {
-        const xOffset = flipped ? -8 : Settings.playerBulletSpawnOffsetX;
-        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: flipped ? -1 : 1, y: 0 });
+        const xOffset = player.flipped ? -8 : Settings.playerBulletSpawnOffsetX;
+        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.flipped ? -1 : 1, y: 0 });
     }
     if (player.combatState == PlayerCombatState.Cow && dashKeyPress() && !dashExhausted) {
-        player.speed.x = flipped ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
+        player.speed.x = player.flipped ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
     }
     if (morphKeyPress()) player.combatState = player.combatState == PlayerCombatState.Human ? PlayerCombatState.Cow : PlayerCombatState.Human;
