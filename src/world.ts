@@ -1,4 +1,4 @@
-import Level from "../asset/lvl_test.json";
+import Level from "../asset/level.json";
 import { platforms, PlatformType } from "./platform";
 import { enemies, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
@@ -7,14 +7,16 @@ import { cows } from "./cow";
 import { Settings } from "./settings";
 
 export function load() {
-    const layer = Level.layers[1];
-    const data = layer.data;
+    const level = Level;
+    const data = decompress(level);
     for (let i = 0; i < data.length; i++) {
         const id = data[i] % Math.pow(2, 31);
-        const x = i % layer.width;
-        const y = floor(i / layer.width);
+        const worldWidth = Settings.width / Settings.tileSize;
+        const worldHeight = Settings.height / Settings.tileSize;
+        const x = i % worldWidth;
+        const y = floor(i / worldWidth);
         if (id == 18 || id == 19 || id == 20) {
-            const adjacentTiles = getAdjacentTiles(i, data, layer.width, layer.height);
+            const adjacentTiles = getAdjacentTiles(i, data, worldWidth, worldHeight);
             const collision = adjacentTiles.some(tileId => tileId == 0);
             platforms.push({
                 x: x * Settings.tileSize,
@@ -48,6 +50,14 @@ export function load() {
             })
         }
     }
+}
+
+function decompress(compressed: string): number[] {
+    const result = [];
+    for (const char of compressed) {
+        result.push(char.charCodeAt(0) - 65);
+    }
+    return result;
 }
 
 function getAdjacentTiles(index: number, data: number[], layerWidth: number, layerHeight: number) {

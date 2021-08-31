@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "gen": "node compress-level.js",
     "serve": "webpack serve",
     "build": "webpack",
     "publish": "webpack && node zip.js",
