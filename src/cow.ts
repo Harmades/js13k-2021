@@ -4,6 +4,7 @@ import { Settings } from "./settings";
 
 export type Cow = Rectangle & {
     collected: boolean;
+    animation: () => number;
 };
 
 export const cows: Cow[] = [];
@@ -15,7 +16,15 @@ const sprite = {
 
 export function render() {
     for (const cow of cows) {
-        if (!cow.collected) draw(sprite, cow);
+        let height = Settings.tileSize;
+        let y = cow.y;
+        if (cow.collected) {
+            const current = cow.animation();
+            height = current * 16;
+            y += (current - 1) * 2;
+        }
+        cow.y = y;
+        draw(sprite, cow, false, Settings.tileSize, height);
     }
 }
 

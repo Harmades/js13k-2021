@@ -5,6 +5,7 @@ import { zero } from "./vector";
 import { floor } from "./alias";
 import { cows } from "./cow";
 import { Settings } from "./settings";
+import { createLinear } from "./animation";
 
 export function load() {
     const level = Level;
@@ -46,7 +47,8 @@ export function load() {
                 y: y * Settings.tileSize,
                 w: Settings.tileSize,
                 h: Settings.tileSize,
-                collected: false
+                collected: false,
+                animation: createLinear(1, 0, 50)
             })
         }
     }

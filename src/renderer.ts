@@ -99,8 +99,8 @@ export function render() {
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
     Bullet.render();
     Enemy.render();
-    Player.render();
     Cow.render();
+    Player.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
