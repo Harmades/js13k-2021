@@ -56,9 +56,11 @@ let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
 const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const dashCounter = createCounter(Settings.playerDashFrames);
+let jumpCounter = 0;
 const morphKeyPress = createReleasedKeyPress("m");
 const shootKeyPress = createReleasedKeyPress("space");
 const dashKeyPress = createReleasedKeyPress("shift");
+const jumpKeyPress = createReleasedKeyPress("up");
 const trails: Player[] = [];
 let trailCounter = 0;
 
@@ -116,15 +118,18 @@ export function update(delta: number) {
     if (player.state == PlayerState.Airborne && currentGravity == 0 && player.speed.y == 0) {
         player.state = PlayerState.Running;
         dashExhausted = false;
+        jumpCounter = 0;
     }
     if (player.state == PlayerState.Dash && dashCounter()) {
         player.state = PlayerState.Airborne;
         dashExhausted = true;
     }
 
-    player.speed.y += currentGravity * delta;
-    if (input.up && player.state != PlayerState.Airborne) {
+    if (jumpKeyPress() && jumpCounter < 2) {
         player.speed.y = -Settings.playerSpeedY;
+        jumpCounter++;
+    } else {
+        player.speed.y += currentGravity * delta;
     }
     if (player.state != PlayerState.Dash) {
         if (input.left) player.speed.x = -Settings.playerSpeedX;
