@@ -4,6 +4,9 @@ export const Settings = {
     cameraWidth: 240,
     cameraHeight: 160,
 
+    uiWidth: 210,
+    uiHeight: 140,
+    
     tileSize: 16,
 
     width: 119 * 16,
@@ -12,8 +15,8 @@ export const Settings = {
     engineTimeResolution: 1,
     gravity: 500,
 
-    playerSpawnX: 3 * 16,
-    playerSpawnY: 21 * 16,
+    playerSpawnX: 27 * 16,
+    playerSpawnY: 22 * 16,
     playerSpeedX: 50,
     playerSpeedY: 300,
     playerDashSpeedX: 150,

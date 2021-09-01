@@ -5,7 +5,7 @@ import { Settings } from "./settings";
 
 export type Camera = Rectangle
 
-const camera: Camera = {
+export const camera: Camera = {
     x: 0,
     y: 0,
     w: Settings.cameraWidth,

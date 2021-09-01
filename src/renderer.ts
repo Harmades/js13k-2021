@@ -34,12 +34,15 @@ function createCanvas(w: number, h: number, id: string | null = null): [HTMLCanv
 export function drawRect(rectangle: Rectangle, color: string) {
     destinationContext.fillStyle = color;
     destinationContext.fillRect(round(rectangle.x), round(rectangle.y), rectangle.w, rectangle.h);
-    // destinationContext.save();
-    // destinationContext.translate(0.5, 0.5);
-    // destinationContext.lineWidth = 1;
-    // destinationContext.strokeStyle = color;
-    // destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
-    // destinationContext.restore();
+}
+
+export function drawRectOutline(rectangle: Rectangle, color: string) {
+    destinationContext.save();
+    destinationContext.translate(0.5, 0.5);
+    destinationContext.lineWidth = 1;
+    destinationContext.strokeStyle = color;
+    destinationContext.strokeRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+    destinationContext.restore();
 }
 
 function loadImage(path: string): HTMLImageElement {
@@ -102,6 +105,7 @@ export function render() {
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
     Camera.render();
+    sourceContext = atlasContext;
     Ui.render();
 }
 
