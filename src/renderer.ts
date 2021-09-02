@@ -91,17 +91,28 @@ export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Re
     destinationContext.restore();
 }
 
-export function drawText(text: string) {
-    cameraContext.font = "12px serif";
-    cameraContext.fillText(text, 190, 20);
+export function drawText(text: string, { x, y }: Vector) {
+    cameraContext.font = "12px sans-serif";
+    cameraContext.fillStyle = "#FFFFEB";
+    cameraContext.fillText(text, x, y);
 }
 
-export function cameraRender({ x, y, w, h }: Camera.Camera) {
-    const cx = floor(x);
-    const cy = round(y);
-    destinationContext.drawImage(backgroundContext.canvas, round(cx * 0.4), round(cy * 0.4), w, h, 0, 0, w, h);
-    destinationContext.drawImage(staticContext.canvas, cx, cy, w, h, 0, 0, w, h);
-    destinationContext.drawImage(playerContext.canvas, cx, cy, w, h, 0, 0, w, h);
+export function cameraRender({ x, y, w, h, ox, oy, colorized }: Camera.Camera) {
+    if (!colorized) {
+        destinationContext.save();
+        // destinationContext.globalCompositeOperation = "source-atop";
+    }
+    const cx = floor(x) + ox;
+    const cy = round(y) + oy;
+    destinationContext.drawImage(backgroundContext.canvas, round(x * 0.4) + ox, round(y * 0.4) + oy, w, h, ox, oy, w, h);
+    destinationContext.drawImage(staticContext.canvas, cx, cy, w, h, ox, oy, w, h);
+    destinationContext.drawImage(playerContext.canvas, cx, cy, w, h, ox, oy, w, h);
+    if (!colorized) {
+        destinationContext.globalCompositeOperation = "color";
+        destinationContext.fillStyle = "black";
+        destinationContext.fillRect(ox, oy, w, h);        
+        destinationContext.restore();
+    }
 }
 
 export function render() {
@@ -110,8 +121,8 @@ export function render() {
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
     Bullet.render();
     Enemy.render();
-    Cow.render();
     Player.render();
+    Cow.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);

@@ -8,6 +8,13 @@ export type Cow = Rectangle & {
     sprite: Sprite;
 };
 
+export const cowSprite = {
+    x: 5 * Settings.tileSize,
+    y: 0,
+    w: Settings.tileSize,
+    h: Settings.tileSize
+};
+
 export const cows: Cow[] = [];
 
 export function render() {

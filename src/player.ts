@@ -4,8 +4,8 @@ import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
-import { createCounter } from "./animation";
-import { track } from "./camera";
+import { createCounter, createLinear } from "./animation";
+import { shut, track } from "./camera";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -21,7 +21,8 @@ export const PlayerState = {
     Running: 1,
     Coyote: 2,
     Airborne: 3,
-    Dash: 4
+    Dash: 4,
+    Dead: 5
 };
 
 export const PlayerCombatState = {
@@ -62,7 +63,9 @@ const shootKeyPress = createReleasedKeyPress("space");
 const dashKeyPress = createReleasedKeyPress("shift");
 const jumpKeyPress = createReleasedKeyPress("up");
 const trails: Player[] = [];
-let trailCounter = 0;
+let animation = createLinear(1, 0, 50);
+
+
 
 export const player: Player = {
     x: Settings.playerSpawnX,
@@ -91,8 +94,10 @@ export function render() {
     if (player.state == PlayerState.Dash) {
         player.sprite = cowDashSprite;
     }
+    if (player.state == PlayerState.Dead) {
+        player.sprite.h = animation() * Settings.tileSize;
+    }
     if (player.speed.x != 0) player.flip = player.speed.x < 0;
-    trailCounter++;
     if (trails.length == 5) trails.shift();
     trails.filter(trail => trail.state == PlayerState.Airborne && player.speed.y < 0 || trail.state == PlayerState.Dash)
         .map((trail, i) => draw({ ...trail, ...trail.sprite, alpha: i / (trails.length - 1) }, trail));
@@ -101,6 +106,7 @@ export function render() {
 }
 
 export function update(delta: number) {
+    if (player.state == PlayerState.Dead) return;
     if (player.state == PlayerState.Idle && player.speed.x != 0) player.state = PlayerState.Running;
     if (player.state == PlayerState.Idle && player.speed.y != 0) player.state = PlayerState.Airborne;
     if (player.state == PlayerState.Running && player.speed.y > 0) player.state = PlayerState.Coyote;
@@ -165,9 +171,22 @@ export function collide(translationVector: Vector) {
 }
 
 export function playerDie() {
+    if (player.state == PlayerState.Dead) return;
+    player.state = PlayerState.Dead;
+    animation = createLinear(1, 0, 50);
     player.speed = zero();
+    shut();
+}
+
+export function respawn() {
     player.x = currentSpawn.x;
     player.y = currentSpawn.y;
+    animation = createLinear(0, 1, 50);
+}
+
+export function resurrect() {
+    player.sprite.h = Settings.tileSize;
+    player.state = PlayerState.Airborne;
 }
 
 export function collect() { player.cows++; }

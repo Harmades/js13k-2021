@@ -3,7 +3,7 @@ import { platforms, PlatformType } from "./platform";
 import { enemies, enemyHumanIdleSprite, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
-import { cows } from "./cow";
+import { cows, cowSprite } from "./cow";
 import { Settings } from "./settings";
 import { createLinear } from "./animation";
 
@@ -52,12 +52,7 @@ export function load() {
                 h: Settings.tileSize,
                 collected: false,
                 animation: createLinear(1, 0, 50),
-                sprite: {
-                    x: 5 * Settings.tileSize,
-                    y: 0,
-                    w: Settings.tileSize,
-                    h: Settings.tileSize
-                }
+                sprite: { ...cowSprite }
             })
         }
     }

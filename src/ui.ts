@@ -2,7 +2,7 @@ import { draw, drawRectOutline, drawText } from "./renderer";
 import * as Player from "./player";
 import * as Camera from "./camera";
 import { Settings } from "./settings";
-import { Cow, cows } from "./cow";
+import { cows, cowSprite } from "./cow";
 import { getCenter } from "./rectangle";
 import { abs } from "./alias";
 
@@ -12,6 +12,13 @@ const uiFrame = {
     w: Settings.uiWidth,
     h: Settings.uiHeight
 };
+
+const scorePosition = {
+    x: 190,
+    y: 20
+};
+
+const margin = 4;
 
 const sprite = {
     x: 5 * 16 + 5,
@@ -25,8 +32,9 @@ export function update(delta: number) {
 }
 
 export function render() {
-    drawText(`🐄 x ${Player.player.cows}`);
-    drawRectOutline(uiFrame, "#FFFFFF");
+    draw(cowSprite, { x: scorePosition.x - cowSprite.w / 2, y: scorePosition.y - cowSprite.h / 2 });
+    drawText(` x ${Player.player.cows}`, { x: scorePosition.x + cowSprite.w / 2, y: scorePosition.y + cowSprite.h / 2 });
+    drawRectOutline(uiFrame, "#FFFFEB");
 
     for (const cow of cows) {
         if (cow.collected) continue;

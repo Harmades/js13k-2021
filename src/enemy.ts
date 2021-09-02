@@ -66,7 +66,7 @@ export function render() {
         if (enemy.state == EnemyState.Dead) {
             const current = enemy.animation();
             enemy.sprite.h = current * 16;
-            enemy.y -= (current - 1);
+            enemy.y -= (current - 1) * 2;
         }
         draw({ ...enemy, ...enemy.sprite }, enemy);
     }
