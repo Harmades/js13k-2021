@@ -11,7 +11,7 @@ export type Enemy = Rectangle & {
     state: number;
     type: number;
     patrol: Vector[];
-    flipped: boolean;
+    flip: boolean;
 }
 
 export const EnemyType = {
@@ -59,7 +59,7 @@ const patrols = enemies.map(enemy => createPatrol(enemy));
 
 export function render() {
     for (const enemy of enemies) {
-        enemy.flipped = sign(enemy.speed.x) == 1;
+        enemy.flip = sign(enemy.speed.x) == 1;
         if (enemy.type == EnemyType.Human) {
             if (enemy.state == EnemyState.Idle) currentSprite = enemyHumanIdleSprite;
             if (enemy.state == EnemyState.Running) {
@@ -84,7 +84,7 @@ export function render() {
                 }
             }
         }
-        draw(currentSprite, enemy, enemy.flipped);
+        draw({ ...currentSprite, flip: enemy.flip }, enemy);
     }
 }
 

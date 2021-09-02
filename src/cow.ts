@@ -11,7 +11,9 @@ export const cows: Cow[] = [];
 
 const sprite = {
     x: 5 * Settings.tileSize,
-    y: 0
+    y: 0,
+    w: Settings.tileSize,
+    h: Settings.tileSize
 }
 
 export function render() {
@@ -24,7 +26,8 @@ export function render() {
             y += (current - 1) * 2;
         }
         cow.y = y;
-        draw(sprite, cow, false, Settings.tileSize, height);
+        cow.h = height;
+        draw(sprite, cow);
     }
 }
 

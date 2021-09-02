@@ -1,6 +1,6 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { draw } from "./renderer";
+import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
@@ -12,9 +12,8 @@ export type Player = Rectangle & {
     state: number;
     combatState: number;
     cows: number;
-    sprite: Vector,
-    flipped: boolean,
-    span: number
+    sprite: Sprite,
+    flip: boolean,
 }
 
 export const PlayerState = {
@@ -48,7 +47,8 @@ const cowWalkSprite = {
 };
 const cowDashSprite = {
     x: 1 * Settings.tileSize,
-    y: 1 * Settings.tileSize
+    y: 1 * Settings.tileSize,
+    w: 2 * Settings.tileSize
 };
 let currentGravity = 0;
 let dashExhausted = false;
@@ -74,14 +74,12 @@ export const player: Player = {
     combatState: PlayerCombatState.Human,
     cows: 0,
     sprite: humanIdleSprite,
-    flipped: false,
-    span: 1
+    flip: false
 }
 
 export function render() {
     const idleSprite = player.combatState == PlayerCombatState.Human ? humanIdleSprite : cowIdleSprite;
     const walkSprite = player.combatState == PlayerCombatState.Human ? humanWalkSprite : cowWalkSprite;
-    player.span = 1;
     if (player.state == PlayerState.Running) {
         if (walkCounter()) {
             player.sprite = player.sprite == idleSprite ? walkSprite : idleSprite;
@@ -92,15 +90,14 @@ export function render() {
     }
     if (player.state == PlayerState.Dash) {
         player.sprite = cowDashSprite;
-        player.span = 2;
     }
-    if (player.speed.x != 0) player.flipped = player.speed.x < 0;
+    if (player.speed.x != 0) player.flip = player.speed.x < 0;
     trailCounter++;
     if (trails.length == 5) trails.shift();
     trails.filter(trail => trail.state == PlayerState.Airborne && player.speed.y < 0 || trail.state == PlayerState.Dash)
-        .map((trail, i) => draw(trail.sprite, trail, trail.flipped, trail.span * Settings.tileSize, Settings.tileSize, i / (trails.length - 1)));
+        .map((trail, i) => draw({ ...trail, ...trail.sprite, alpha: i / (trails.length - 1) }, trail));
     trails.push({ ...player });
-    draw(player.sprite, player, player.flipped, player.span * Settings.tileSize, Settings.tileSize);
+    draw({ ...player.sprite, flip: player.flip }, player);
 }
 
 export function update(delta: number) {
@@ -140,11 +137,11 @@ export function update(delta: number) {
     }
 
     if (player.combatState == PlayerCombatState.Human && shootKeyPress()) {
-        const xOffset = player.flipped ? -8 : Settings.playerBulletSpawnOffsetX;
-        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.flipped ? -1 : 1, y: 0 });
+        const xOffset = player.flip ? -8 : Settings.playerBulletSpawnOffsetX;
+        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.flip ? -1 : 1, y: 0 });
     }
     if (player.combatState == PlayerCombatState.Cow && dashKeyPress() && !dashExhausted) {
-        player.speed.x = player.flipped ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
+        player.speed.x = player.flip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
     }
     if (morphKeyPress()) player.combatState = player.combatState == PlayerCombatState.Human ? PlayerCombatState.Cow : PlayerCombatState.Human;

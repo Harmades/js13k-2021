@@ -34,7 +34,7 @@ export function load() {
                 y: y * Settings.tileSize,
                 w: Settings.tileSize,
                 h: Settings.tileSize,
-                flipped: false,
+                flip: false,
                 patrol: [],
                 speed: zero(),
                 state: EnemyState.Idle,

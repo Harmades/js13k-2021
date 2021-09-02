@@ -1,4 +1,4 @@
-import { draw, drawRect, drawRectOutline, drawText } from "./renderer";
+import { draw, drawRectOutline, drawText } from "./renderer";
 import * as Player from "./player";
 import * as Camera from "./camera";
 import { Settings } from "./settings";
@@ -15,7 +15,9 @@ const uiFrame = {
 
 const sprite = {
     x: 5 * 16 + 5,
-    y: 0 * 16 + 5
+    y: 0 * 16 + 5,
+    w: 10,
+    h: 10
 }
 
 export function update(delta: number) {
@@ -34,13 +36,13 @@ export function render() {
             let x = uiFrame.x;
             if (cowCenter.x > cameraCenter.x) x += uiFrame.w;
             const y = uiFrame.w / 2 * (cowCenter.y - cameraCenter.y) / abs(cowCenter.x - cameraCenter.x) + uiFrame.h / 2;
-            if (y > 0 && y < uiFrame.h) draw(sprite, { x: x - 4, y: uiFrame.y + y - 3 }, false, 10, 10);
+            if (y > 0 && y < uiFrame.h) draw(sprite, { x: x - 4, y: uiFrame.y + y - 3 });
         }
         if (abs(cowCenter.y - cameraCenter.y) > uiFrame.h / 2) {
             let y = uiFrame.y;
             if (cowCenter.y > cameraCenter.y) y += uiFrame.h;
             const x = uiFrame.h / 2 * (cowCenter.x - cameraCenter.x) / abs(cowCenter.y - cameraCenter.y) + uiFrame.w / 2;
-            if (x > 0 && x < uiFrame.w) draw(sprite, { x: uiFrame.x + x - 3, y: y - 4 }, false, 10, 10);
+            if (x > 0 && x < uiFrame.w) draw(sprite, { x: uiFrame.x + x - 3, y: y - 4 });
         }
     }
 }
