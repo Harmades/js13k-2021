@@ -3,7 +3,7 @@ import { createCounter } from "./animation";
 import { Settings } from "./settings";
 import { Vector } from "./vector";
 import { abs, sign } from "./alias";
-import { draw } from "./renderer";
+import { draw, Sprite } from "./renderer";
 import { player, playerDie, PlayerState } from "./player";
 
 export type Enemy = Rectangle & {
@@ -12,6 +12,9 @@ export type Enemy = Rectangle & {
     type: number;
     patrol: Vector[];
     flip: boolean;
+    animation: () => number;
+    sprite: Sprite;
+    colorized: boolean;
 }
 
 export const EnemyType = {
@@ -22,12 +25,13 @@ export const EnemyType = {
 
 export const EnemyState = {
     Idle: 0,
-    Running: 1
+    Running: 1,
+    Dead: 2
 };
 
 export let enemies: Enemy[] = []
 
-const enemyHumanIdleSprite = {
+export const enemyHumanIdleSprite = {
     x: 4 * Settings.tileSize,
     y: 2 * Settings.tileSize
 };
@@ -51,8 +55,6 @@ const enemyShieldWalkSprite = {
     x: 4 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
-let currentSprite = enemyHumanIdleSprite;
-
 
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const patrols = enemies.map(enemy => createPatrol(enemy));
@@ -60,32 +62,43 @@ const patrols = enemies.map(enemy => createPatrol(enemy));
 export function render() {
     for (const enemy of enemies) {
         enemy.flip = sign(enemy.speed.x) == 1;
-        if (enemy.type == EnemyType.Human) {
-            if (enemy.state == EnemyState.Idle) currentSprite = enemyHumanIdleSprite;
-            if (enemy.state == EnemyState.Running) {
-                if (walkCounter()) {
-                    currentSprite = currentSprite == enemyHumanIdleSprite ? enemyHumanWalkSprite : enemyHumanIdleSprite;
-                }
-            }
+        enemy.sprite = getSprite(enemy);
+        if (enemy.state == EnemyState.Dead) {
+            const current = enemy.animation();
+            enemy.sprite.h = current * 16;
+            enemy.y -= (current - 1);
         }
-        if (enemy.type == EnemyType.Butcher) {
-            if (enemy.state == EnemyState.Idle) currentSprite = enemyButcherIdleSprite;
-            if (enemy.state == EnemyState.Running) {
-                if (walkCounter()) {
-                    currentSprite = currentSprite == enemyButcherIdleSprite ? enemyButcherWalkSprite : enemyButcherIdleSprite;
-                }
-            }
-        }
-        if (enemy.type == EnemyType.Shield) {
-            if (enemy.state == EnemyState.Idle) currentSprite = enemyShieldIdleSprite;
-            if (enemy.state == EnemyState.Running) {
-                if (walkCounter()) {
-                    currentSprite = currentSprite == enemyShieldIdleSprite ? enemyShieldWalkSprite : enemyShieldIdleSprite;
-                }
-            }
-        }
-        draw({ ...currentSprite, flip: enemy.flip }, enemy);
+        draw({ ...enemy, ...enemy.sprite }, enemy);
     }
+}
+
+function getSprite(enemy: Enemy) {
+    let sprite = enemy.sprite;
+    if (enemy.type == EnemyType.Human) {
+        if (enemy.state == EnemyState.Idle) sprite = enemyHumanIdleSprite;
+        if (enemy.state == EnemyState.Running) {
+            if (walkCounter()) {
+                sprite = sprite == enemyHumanIdleSprite ? enemyHumanWalkSprite : enemyHumanIdleSprite;
+            }
+        }
+    }
+    if (enemy.type == EnemyType.Butcher) {
+        if (enemy.state == EnemyState.Idle) sprite = enemyButcherIdleSprite;
+        if (enemy.state == EnemyState.Running) {
+            if (walkCounter()) {
+                sprite = sprite == enemyButcherIdleSprite ? enemyButcherWalkSprite : enemyButcherIdleSprite;
+            }
+        }
+    }
+    if (enemy.type == EnemyType.Shield) {
+        if (enemy.state == EnemyState.Idle) sprite = enemyShieldIdleSprite;
+        if (enemy.state == EnemyState.Running) {
+            if (walkCounter()) {
+                sprite = sprite == enemyShieldIdleSprite ? enemyShieldWalkSprite : enemyShieldIdleSprite;
+            }
+        }
+    }
+    return { ...sprite };
 }
 
 export function update(delta: number) {
@@ -96,7 +109,8 @@ export function update(delta: number) {
 }
 
 function die(enemy: Enemy) {
-    enemies = enemies.filter(e => e != enemy);
+    enemy.state = EnemyState.Dead;
+    enemy.colorized = false;
 }
 
 export function bulletHit(enemy: Enemy) {
@@ -109,6 +123,7 @@ export function dashHit(enemy: Enemy) {
 }
 
 export function enemyCollide(enemy: Enemy) {
+    if (enemy.state == EnemyState.Dead) return;
     if (player.state == PlayerState.Dash) dashHit(enemy);
     else playerDie();
 }

@@ -1,6 +1,6 @@
 import Level from "../asset/level.json";
 import { platforms, PlatformType } from "./platform";
-import { enemies, EnemyState, EnemyType } from "./enemy";
+import { enemies, enemyHumanIdleSprite, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
 import { cows } from "./cow";
@@ -38,7 +38,10 @@ export function load() {
                 patrol: [],
                 speed: zero(),
                 state: EnemyState.Idle,
-                type: id == 7 ? EnemyType.Human : id == 8 ? EnemyType.Butcher : EnemyType.Shield
+                type: id == 7 ? EnemyType.Human : id == 8 ? EnemyType.Butcher : EnemyType.Shield,
+                animation: createLinear(1, 0, 50),
+                sprite: { ...enemyHumanIdleSprite },
+                colorized: true
             })
         }
         if (id == 10) {
@@ -48,7 +51,13 @@ export function load() {
                 w: Settings.tileSize,
                 h: Settings.tileSize,
                 collected: false,
-                animation: createLinear(1, 0, 50)
+                animation: createLinear(1, 0, 50),
+                sprite: {
+                    x: 5 * Settings.tileSize,
+                    y: 0,
+                    w: Settings.tileSize,
+                    h: Settings.tileSize
+                }
             })
         }
     }

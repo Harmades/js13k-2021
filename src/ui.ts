@@ -2,7 +2,7 @@ import { draw, drawRectOutline, drawText } from "./renderer";
 import * as Player from "./player";
 import * as Camera from "./camera";
 import { Settings } from "./settings";
-import { cows } from "./cow";
+import { Cow, cows } from "./cow";
 import { getCenter } from "./rectangle";
 import { abs } from "./alias";
 
