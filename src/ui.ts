@@ -10,7 +10,8 @@ const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
     y: (Settings.cameraHeight - Settings.uiHeight) / 2,
     w: Settings.uiWidth,
-    h: Settings.uiHeight
+    h: Settings.uiHeight,
+    color: "#FFFFEB"
 };
 
 const scorePosition = {
@@ -36,7 +37,7 @@ export function update(delta: number) {
 export function render() {
     draw(cowSprite, { x: scorePosition.x - cowSprite.w / 2, y: scorePosition.y - cowSprite.h / 2 });
     drawText(` x ${Player.player.cows}`, { x: scorePosition.x + cowSprite.w / 2, y: scorePosition.y + cowSprite.h / 2 });
-    drawRectOutline(uiFrame, "#FFFFEB");
+    drawRectOutline(uiFrame);
 
     for (const cow of cows) {
         if (cow.collected) continue;

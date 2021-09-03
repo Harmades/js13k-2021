@@ -58,9 +58,8 @@ const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const dashCounter = createCounter(Settings.playerDashFrames);
 let jumpCounter = 0;
-const morphKeyPress = createReleasedKeyPress("m");
-const shootKeyPress = createReleasedKeyPress("space");
-const dashKeyPress = createReleasedKeyPress("shift");
+const morphKeyPress = createReleasedKeyPress("shift");
+const spaceKeyPress = createReleasedKeyPress("space");
 const jumpKeyPress = createReleasedKeyPress("up");
 const trails: Player[] = [];
 let animation = createLinear(1, 0, 50);
@@ -142,11 +141,11 @@ export function update(delta: number) {
         player.speed.y = 0;
     }
 
-    if (player.combatState == PlayerCombatState.Human && shootKeyPress()) {
+    if (player.combatState == PlayerCombatState.Human && spaceKeyPress()) {
         const xOffset = player.flip ? -8 : Settings.playerBulletSpawnOffsetX;
         spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.flip ? -1 : 1, y: 0 });
     }
-    if (player.combatState == PlayerCombatState.Cow && dashKeyPress() && !dashExhausted) {
+    if (player.combatState == PlayerCombatState.Cow && spaceKeyPress() && !dashExhausted) {
         player.speed.x = player.flip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
     }

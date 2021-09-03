@@ -48,7 +48,7 @@ export function drawRect({ x, y, w = 1, h = 1, color = "#FFFFFF" }: Sprite) {
     destinationContext.fillRect(round(x), round(y), w, h);
 }
 
-export function drawRectOutline({ x, y, w, h }: Rectangle, color: string) {
+export function drawRectOutline({ x, y, w = 1, h = 1, color = "" }: Sprite) {
     destinationContext.save();
     destinationContext.translate(0.5, 0.5);
     destinationContext.lineWidth = 1;

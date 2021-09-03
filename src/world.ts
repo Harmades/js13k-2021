@@ -61,7 +61,7 @@ export function load() {
 function decompress(compressed: string): number[] {
     const result = [];
     for (const char of compressed) {
-        result.push(char.charCodeAt(0) - 65);
+        result.push(char.charCodeAt(0) - 97);
     }
     return result;
 }

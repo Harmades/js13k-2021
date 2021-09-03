@@ -4,23 +4,26 @@ export const input = {
     left: false,
     right: false,
     space: false,
-    m: false,
     shift: false,
 }
 
 export type Input = typeof input;
 
-document.addEventListener("keydown", event => setKey(event.key, true));
-document.addEventListener("keyup", event => setKey(event.key, false));
+onkeydown = onkeyup = event => setKey(event.keyCode, event.type[5] != undefined);
 
-function setKey(key: string, value: boolean) {
-    if (key == "ArrowUp") input.up = value;
-    if (key == "ArrowDown") input.down = value;
-    if (key == "ArrowLeft") input.left = value;
-    if (key == "ArrowRight") input.right = value;
-    if (key == " ") input.space = value;
-    if (key == "m") input.m = value;
-    if (key == "Shift") input.shift = value;
+function setKey(keyCode: number, value: boolean) {
+  // Up (up / W / Z)
+  if (keyCode == 38 || keyCode == 90 || keyCode == 87) input.up = value;
+  // Right (right / D)
+  if (keyCode == 39 || keyCode == 68) input.right = value;
+  // Down (down / S)
+  if (keyCode == 40 || keyCode == 83) input.down = value;
+  // Left (left / A / Q)
+  if (keyCode == 37 || keyCode == 65 || keyCode == 81) input.left = value;
+  // Shift (left / right)
+  if (keyCode == 16) input.shift = value;
+  // Space
+  if (keyCode == 32) input.space = value;
 }
 
 export function update(delta: number) { }
