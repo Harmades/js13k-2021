@@ -35,6 +35,12 @@ export function update(player: Rectangle, platforms: Platform[], enemies: Enemy[
             if (platform.type == PlatformType.Spikes) playerDie();
             else collide(translationVector);
         }
+        for (const bullet of getEntitiesNearEntity(platform, bullets)) {
+            const platformBulletCollision = getCollision(platform, bullet);
+            if (platformBulletCollision != null) {
+                bulletCollide(bullet);
+            }
+        }
     }
 
     for (const enemy of getEntitiesNearEntity(player, enemies)) {
