@@ -25,7 +25,9 @@ const sprite = {
     y: 0 * 16 + 5,
     w: 10,
     h: 10
-}
+};
+
+const title = "Space Cowboy";
 
 export function update(delta: number) {
 
