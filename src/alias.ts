@@ -16,3 +16,5 @@ export function max(value1: number, value2: number) { return Math.max(value1, va
 export function getElementById(id: string) { return document.getElementById(id); }
 
 export function createElement(element: string) { return document.createElement(element); }
+
+export const PI = Math.PI;

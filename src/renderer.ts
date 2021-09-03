@@ -8,9 +8,10 @@ import * as Background from "./background";
 import * as Camera from "./camera";
 import * as Cow from "./cow";
 import * as Ui from "./ui";
+import * as Light from "./light";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
-import { createElement, floor, getElementById, round } from "./alias";
+import { createElement, floor, getElementById, round, sign } from "./alias";
 
 export type Sprite = {
     x: number;
@@ -79,6 +80,22 @@ export function draw({ x, y, w = 16, h = 16, flip = false, alpha = 1 }: Sprite, 
     destinationContext.restore();
 }
 
+export function drawGradientCircle({ x, y, color, radius, alpha, angle }: Light.Light) {
+    destinationContext.save();
+    destinationContext.globalAlpha = alpha;
+    destinationContext.globalCompositeOperation = "lighter";
+    const gradient = destinationContext.createRadialGradient(x, y, 1, x, y, radius);
+    gradient.addColorStop(0, color);
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+    destinationContext.beginPath();
+    destinationContext.moveTo(x, y);
+    destinationContext.closePath();
+    destinationContext.arc(x, y, radius, 0, angle, sign(angle) == -1);
+    destinationContext.fillStyle = gradient;
+    destinationContext.fill();
+    destinationContext.restore();
+}
+
 export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Rectangle) {
     if (!atlas.complete) return;
     offscreenContext.drawImage(atlas, sx, sy, Settings.tileSize, Settings.tileSize, 0, 0, Settings.tileSize, Settings.tileSize);
@@ -100,7 +117,6 @@ export function drawText(text: string, { x, y }: Vector) {
 export function cameraRender({ x, y, w, h, ox, oy, colorized }: Camera.Camera) {
     if (!colorized) {
         destinationContext.save();
-        // destinationContext.globalCompositeOperation = "source-atop";
     }
     const cx = floor(x) + ox;
     const cy = round(y) + oy;
@@ -123,6 +139,7 @@ export function render() {
     Enemy.render();
     Player.render();
     Cow.render();
+    Light.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);
@@ -137,6 +154,7 @@ export function staticRender() {
     Background.render();
     destinationContext = staticContext;
     Platform.render();
+    Light.render();
 }
 
 function atlasRender() {
