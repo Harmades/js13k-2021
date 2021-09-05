@@ -8,28 +8,38 @@ import { createLinear } from "./animation";
 import { level } from "../gen/level";
 import { Id } from "../gen/id";
 
+type Data = {
+    id: number;
+    hFlip: boolean;
+    vFlip: boolean;
+    dFlip: boolean;
+}
+
 export function load() {
     for (const layer of level) {
-        const data = decompress(layer);
-        for (let i = 0; i < data.length; i++) {
-            const id = data[i] % Math.pow(2, 31) - 1;
+        const dataArray = decompress(layer);
+        for (let i = 0; i < dataArray.length; i++) {
+            const data = dataArray[i];
             const worldWidth = Settings.width / Settings.tileSize;
             const worldHeight = Settings.height / Settings.tileSize;
             const x = i % worldWidth;
             const y = floor(i / worldWidth);
-            if (isTile(id)) {
-                const adjacentTiles = getAdjacentTiles(i, data, worldWidth, worldHeight);
-                const collision = (id == Id.floor_tile || id == Id.intern_floor_tile) && adjacentTiles.some(tileId => tileId == 1);
+            if (isTile(data.id)) {
+                const adjacentTiles = getAdjacentTiles(i, dataArray, worldWidth, worldHeight);
+                const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile);
                 tiles.push({
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
                     w: Settings.tileSize,
                     h: Settings.tileSize,
                     collision: collision,
-                    id: id
+                    id: data.id,
+                    hFlip: data.hFlip,
+                    vFlip: data.vFlip,
+                    dFlip: data.dFlip,
                 });
             }
-            if (isEnemy(id)) {
+            if (isEnemy(data.id)) {
                 enemies.push({
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
@@ -39,13 +49,13 @@ export function load() {
                     patrol: [],
                     speed: zero(),
                     state: EnemyState.Idle,
-                    type: id == Id.ennemy_human_butcher ? EnemyType.Human : id == Id.ennemy_butcher ? EnemyType.Butcher : EnemyType.Shield,
+                    type: data.id == Id.enenemy_human_butcher ? EnemyType.Human : data.id == Id.ennemy_butcher ? EnemyType.Butcher : EnemyType.Shield,
                     animation: createLinear(1, 0, 50),
                     sprite: { ...enemyHumanIdleSprite },
                     colorized: true
                 })
             }
-            if (isCow(id)) {
+            if (isCow(data.id)) {
                 cows.push({
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
@@ -66,20 +76,39 @@ function isTile(id: number) {
 }
 
 function isEnemy(id: number) {
-    return id == Id.ennemy_butcher || id == Id.ennemy_human_butcher || id == Id.ennemy_shield_butcher;
+    return id == Id.ennemy_butcher || id == Id.enenemy_human_butcher || id == Id.ennemy_shield_butcher;
 }
 
 function isCow(id: number) { return id == Id.pnj_cow; }
 
-function decompress(compressed: string): number[] {
-    const result = [];
-    for (const char of compressed) {
-        result.push(char.charCodeAt(0) - 97);
+function decompress(compressed: string): Data[] {
+    const result: Data[] = [];
+    for (let i = 0; i < compressed.length; i++) {
+        if (!isNaN(Number.parseInt(compressed[i]))) continue;
+        const id = compressed[i].charCodeAt(0) - 97 - 1;
+        const modifier = i != compressed.length - 1 ? compressed[i + 1] : null;
+        let modifierValue = modifier != null ? Number.parseInt(modifier) : null;
+        let hFlip = false;
+        let vFlip = false;
+        let dFlip = false;
+
+        if (modifierValue != null && !isNaN(modifierValue)) {
+            if ((modifierValue & (1 << 2)) != 0) hFlip = true;
+            if ((modifierValue & (1 << 1)) != 0) vFlip = true;
+            if ((modifierValue & (1 << 0)) != 0) dFlip = true;
+        }
+        
+        result.push({
+            id: id,
+            hFlip: hFlip,
+            vFlip: vFlip,
+            dFlip: dFlip
+        });
     }
     return result;
 }
 
-function getAdjacentTiles(index: number, data: number[], layerWidth: number, layerHeight: number) {
+function getAdjacentTiles(index: number, data: Data[], layerWidth: number, layerHeight: number) {
     const column = index % layerWidth;
     const row = floor(index / layerWidth);
 

@@ -22,8 +22,8 @@ const scorePosition = {
 const margin = 4;
 
 const sprite = {
-    x: 5 * 16 + 5,
-    y: 0 * 16 + 5,
+    x: cowSprite.x + 5,
+    y: cowSprite.y + 5,
     w: 10,
     h: 10
 };

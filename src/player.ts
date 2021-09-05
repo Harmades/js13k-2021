@@ -13,7 +13,7 @@ export type Player = Rectangle & {
     combatState: number;
     cows: number;
     sprite: Sprite,
-    flip: boolean,
+    hFlip: boolean,
 }
 
 export const PlayerState = {
@@ -76,7 +76,7 @@ export const player: Player = {
     combatState: PlayerCombatState.Human,
     cows: 0,
     sprite: humanIdleSprite,
-    flip: false
+    hFlip: false,
 }
 
 export function render() {
@@ -96,12 +96,12 @@ export function render() {
     if (player.state == PlayerState.Dead) {
         player.sprite.h = animation() * Settings.tileSize;
     }
-    if (player.speed.x != 0) player.flip = player.speed.x < 0;
+    if (player.speed.x != 0) player.hFlip = player.speed.x < 0;
     if (trails.length == 5) trails.shift();
     trails.filter(trail => trail.state == PlayerState.Airborne && player.speed.y < 0 || trail.state == PlayerState.Dash)
         .map((trail, i) => draw({ ...trail, ...trail.sprite, alpha: i / (trails.length - 1) }, trail));
     trails.push({ ...player });
-    draw({ ...player.sprite, flip: player.flip }, player);
+    draw({ ...player.sprite, hFlip: player.hFlip }, player);
 }
 
 export function update(delta: number) {
@@ -142,11 +142,11 @@ export function update(delta: number) {
     }
 
     if (player.combatState == PlayerCombatState.Human && spaceKeyPress()) {
-        const xOffset = player.flip ? -8 : Settings.playerBulletSpawnOffsetX;
-        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.flip ? -1 : 1, y: 0 });
+        const xOffset = player.hFlip ? -8 : Settings.playerBulletSpawnOffsetX;
+        spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.hFlip ? -1 : 1, y: 0 });
     }
     if (player.combatState == PlayerCombatState.Cow && spaceKeyPress() && !dashExhausted) {
-        player.speed.x = player.flip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
+        player.speed.x = player.hFlip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
     }
     if (morphKeyPress()) player.combatState = player.combatState == PlayerCombatState.Human ? PlayerCombatState.Cow : PlayerCombatState.Human;

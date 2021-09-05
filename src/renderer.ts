@@ -3,7 +3,7 @@ import { Settings } from "./settings";
 import * as Player from "./player"
 import * as Enemy from "./enemy"
 import * as Bullet from "./bullet"
-import * as Platform from "./tile";
+import * as Tile from "./tile";
 import * as Background from "./background";
 import * as Camera from "./camera";
 import * as Cow from "./cow";
@@ -11,14 +11,16 @@ import * as Ui from "./ui";
 import * as Light from "./light";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
-import { createElement, floor, getElementById, round, sign } from "./alias";
+import { createElement, floor, getElementById, PI, round, sign } from "./alias";
 
 export type Sprite = {
     x: number;
     y: number;
     w?: number;
     h?: number;
-    flip?: boolean;
+    hFlip?: boolean;
+    vFlip?: boolean;
+    dFlip?: boolean;
     alpha?: number;
     color?: string;
     colorized?: boolean;
@@ -67,15 +69,32 @@ function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function draw({ x, y, w = 16, h = 16, flip = false, alpha = 1 }: Sprite, vector: Vector) {
+export function draw({ x, y, w = 16, h = 16, hFlip: hFlip = false, vFlip = false, dFlip = false, alpha = 1 }: Sprite, vector: Vector) {
     if (!atlas.complete) return;
     destinationContext.save();
     destinationContext.globalAlpha = alpha;
     destinationContext.translate(round(vector.x), round(vector.y));
-    if (flip) {
+    if (hFlip) {
         destinationContext.translate(Settings.tileSize, 0);
         destinationContext.scale(-1, 1);
     }
+    if (vFlip) {
+        destinationContext.translate(0, Settings.tileSize);
+        destinationContext.scale(1, -1);
+    }
+    if (dFlip) {
+        if (vFlip) {
+            destinationContext.scale(1, -1);
+            destinationContext.rotate(-PI / 2);
+        } else if (hFlip) {
+            destinationContext.scale(-1, 1);
+            destinationContext.rotate(PI / 2);
+        } else {
+            destinationContext.translate(Settings.tileSize, 0);
+            destinationContext.rotate(PI / 2);
+        }
+    }
+    
     destinationContext.drawImage(sourceContext.canvas, x, y, w, h, 0, 0, w, h);
     destinationContext.restore();
 }
@@ -156,7 +175,7 @@ export function staticRender() {
     // destinationContext.shadowOffsetX = 2;
     // destinationContext.shadowOffsetY = 2;
     // destinationContext.shadowColor = "rgba(0, 0, 0, 0.5)";
-    Platform.render();
+    Tile.render();
     Light.render();
 }
 

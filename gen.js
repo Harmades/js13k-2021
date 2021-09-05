@@ -5,9 +5,27 @@ const parseString = require('xml2js').parseString;
 function arrayToString(array) {
     const result = [];
     for (let i of array) {
-        result.push(String.fromCharCode(i % Math.pow(2, 31) + 97));
+        let id = String.fromCharCode(i % Math.pow(2, 29) + 97);
+        let flip = 0;
+        if (hFlipped(i)) flip += Math.pow(2, 2);
+        if (vFlipped(i)) flip += Math.pow(2, 1);
+        if (dFlipped(i)) flip += Math.pow(2, 0);
+        if (flip != 0) id = id + "" + flip.toString();
+        result.push(id);
     }
     return '"' + result.join("") + '"';
+}
+
+function hFlipped(id) {
+    return (id & (1 << 31)) != 0;
+}
+
+function vFlipped(id) {
+    return (id & (1 << 30)) != 0;
+}
+
+function dFlipped(id) {
+    return (id & (1 << 29)) != 0;
 }
 
 // Read Tiled map

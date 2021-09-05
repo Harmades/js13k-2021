@@ -3,18 +3,18 @@ import { draw, drawPattern } from "./renderer";
 import { Settings } from "./settings";
 
 const emptySprite = {
-    x: 4 * Settings.tileSize,
-    y: 4 * Settings.tileSize
+    x: 5 * Settings.tileSize,
+    y: 0 * Settings.tileSize
 };
 
 const stars1Sprite = {
-    x: 5 * Settings.tileSize,
-    y: 4 * Settings.tileSize
+    x: 1 * Settings.tileSize,
+    y: 5 * Settings.tileSize
 };
 
 const stars2Sprite = {
-    x: 5 * Settings.tileSize,
-    y: 3 * Settings.tileSize
+    x: 0 * Settings.tileSize,
+    y: 5 * Settings.tileSize
 };
 
 export function render() {

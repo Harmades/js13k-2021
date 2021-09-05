@@ -11,12 +11,12 @@ export type Light = Vector & {
 }
 
 const light: Light = {
-    x: Settings.playerSpawnX - 3 * 16,
-    y: Settings.playerSpawnY + 16 - 3 * 16,
+    x: Settings.playerSpawnX,
+    y: Settings.playerSpawnY + 2 * Settings.tileSize,
     color: "white",
     alpha: 0.5,
     radius: 64,
-    angle: PI / 2
+    angle: -PI
 }
 
 export function update(delta: number) {

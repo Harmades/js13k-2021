@@ -32,19 +32,19 @@ export const EnemyState = {
 export let enemies: Enemy[] = []
 
 export const enemyHumanIdleSprite = {
-    x: 4 * Settings.tileSize,
-    y: 2 * Settings.tileSize
-};
-const enemyHumanWalkSprite = {
-    x: 0 * Settings.tileSize,
-    y: 3 * Settings.tileSize
-};
-const enemyButcherIdleSprite = {
     x: 1 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
-const enemyButcherWalkSprite = {
+const enemyHumanWalkSprite = {
     x: 2 * Settings.tileSize,
+    y: 3 * Settings.tileSize
+};
+const enemyButcherIdleSprite = {
+    x: 4 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
+const enemyButcherWalkSprite = {
+    x: 0 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
 const enemyShieldIdleSprite = {
