@@ -20,7 +20,7 @@
   <image width="16" height="16" source="tiles/window_side.png"/>
  </tile>
  <tile id="6">
-  <image width="16" height="16" source="Characters/enenemy_human_butcher.png"/>
+  <image width="16" height="16" source="characters/enenemy_human_butcher.png"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="2.78261" y="0.0434783" width="11.1304" height="16"/>
   </objectgroup>
