@@ -3,7 +3,7 @@ import { Settings } from "./settings";
 import * as Player from "./player"
 import * as Enemy from "./enemy"
 import * as Bullet from "./bullet"
-import * as Platform from "./platform";
+import * as Platform from "./tile";
 import * as Background from "./background";
 import * as Camera from "./camera";
 import * as Cow from "./cow";
@@ -153,9 +153,9 @@ export function staticRender() {
     sourceContext = atlasContext;
     Background.render();
     destinationContext = staticContext;
-    destinationContext.shadowOffsetX = 2;
-    destinationContext.shadowOffsetY = 2;
-    destinationContext.shadowColor = "rgba(0, 0, 0, 0.5)";
+    // destinationContext.shadowOffsetX = 2;
+    // destinationContext.shadowOffsetY = 2;
+    // destinationContext.shadowColor = "rgba(0, 0, 0, 0.5)";
     Platform.render();
     Light.render();
 }

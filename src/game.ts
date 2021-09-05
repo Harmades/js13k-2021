@@ -3,7 +3,7 @@ import * as Renderer from "./renderer";
 import * as Player from "./player";
 import * as Enemy from "./enemy";
 import * as Bullets from "./bullet";
-import * as Platform from "./platform";
+import * as Platform from "./tile";
 import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
@@ -39,7 +39,7 @@ export function update(delta: number) {
     Enemy.update(delta);
     Bullets.update(delta);
     Platform.update(delta);
-    Physics.update(Player.player, Platform.platforms, Enemy.enemies);
+    Physics.update(Player.player, Platform.tiles, Enemy.enemies);
     Input.update(delta);
 }
 

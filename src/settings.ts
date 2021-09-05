@@ -9,14 +9,14 @@ export const Settings = {
     
     tileSize: 16,
 
-    width: 119 * 16,
-    height: 85 * 16,
+    width: 190 * 16,
+    height: 100 * 16,
 
     engineTimeResolution: 1,
     gravity: 500,
 
-    playerSpawnX: 27 * 16,
-    playerSpawnY: 22 * 16,
+    playerSpawnX: 96 * 16,
+    playerSpawnY: 87 * 16,
     playerSpeedX: 50,
     playerSpeedY: 300,
     playerDashSpeedX: 150,

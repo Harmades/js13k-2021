@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "gen": "node compress-level.js",
+    "gen": "node gen.js",
     "serve": "webpack serve",
     "build": "webpack",
     "publish": "webpack && node zip.js",
@@ -31,5 +31,6 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "xml2js": "^0.4.23"
   }
 }

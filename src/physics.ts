@@ -2,11 +2,12 @@ import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
 import { bulletHit, Enemy, enemyCollide } from "./enemy";
 import { abs, sign } from "./alias";
-import { Platform, PlatformType } from "./platform";
+import { Tile } from "./tile";
 import { collect, collide, playerDie } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
+import { Id } from "../gen/id";
 
 export type Collision = Rectangle;
 
@@ -25,14 +26,14 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
     };
 }
 
-export function update(player: Rectangle, platforms: Platform[], enemies: Enemy[]) {
+export function update(player: Rectangle, platforms: Tile[], enemies: Enemy[]) {
     for (const platform of getEntitiesNearEntity(player, platforms)) {
         if (!platform.collision) continue;
         const collision = getCollision(player, platform)
         if (collision != null) {
             const translationVector = getTranslationVector(player, platform, collision);
             add(player, translationVector);
-            if (platform.type == PlatformType.Spikes) playerDie();
+            if (platform.id == Id.spikes) playerDie();
             else collide(translationVector);
         }
         for (const bullet of getEntitiesNearEntity(platform, bullets)) {
