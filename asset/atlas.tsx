@@ -70,9 +70,6 @@
  <tile id="19">
   <image width="16" height="16" source="tiles/spikes.png"/>
  </tile>
- <tile id="21">
-  <image width="16" height="16" source="tiles/moving_platform.png"/>
- </tile>
  <tile id="26">
   <image width="16" height="16" source="characters/charac_cow.png"/>
   <objectgroup draworder="index" id="2">
@@ -96,5 +93,8 @@
  </tile>
  <tile id="30">
   <image width="16" height="16" source="other/range_patrol.png"/>
+ </tile>
+ <tile id="31">
+  <image width="16" height="16" source="tiles/moving_platform.png"/>
  </tile>
 </tileset>
