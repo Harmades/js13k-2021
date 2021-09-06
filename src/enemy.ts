@@ -10,8 +10,8 @@ export type Enemy = Rectangle & {
     speed: Vector,
     state: number;
     type: number;
-    patrol: Vector[];
-    flip: boolean;
+    patrol?: (delta: number) => void;
+    hFlip: boolean;
     animation: () => number;
     sprite: Sprite;
     colorized: boolean;
@@ -57,11 +57,10 @@ const enemyShieldWalkSprite = {
 };
 
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
-const patrols = enemies.map(enemy => createPatrol(enemy));
 
 export function render() {
     for (const enemy of enemies) {
-        enemy.flip = sign(enemy.speed.x) == 1;
+        enemy.hFlip = sign(enemy.speed.x) == 1;
         enemy.sprite = getSprite(enemy);
         if (enemy.state == EnemyState.Dead) {
             const current = enemy.animation();
@@ -102,9 +101,8 @@ function getSprite(enemy: Enemy) {
 }
 
 export function update(delta: number) {
-    for (let i = 0; i < enemies.length; i++) {
-        const patrol = patrols[i];
-        // patrol(delta);
+    for (const enemy of enemies) {
+        if (enemy.patrol) enemy.patrol(delta);
     }
 }
 
@@ -128,17 +126,17 @@ export function enemyCollide(enemy: Enemy) {
     else playerDie();
 }
 
-function createPatrol(enemy: Enemy) {
-    let lastPositionIndex = -1;
+export function createPatrol(enemy: Enemy, min: number, max: number) {
+    let target = -1;
     return (delta: number) => {
-        const targetIndex = (lastPositionIndex + 1) % enemy.patrol.length;
-        const target = enemy.patrol[targetIndex];
-        if (abs(target.x - enemy.x) <= Settings.epsilon) {
-            lastPositionIndex = targetIndex;
-        } else {
-            const s = sign(target.x - enemy.x);
-            enemy.speed.x = s * Settings.enemySpeedX;
-            enemy.x += enemy.speed.x * delta;
+        if (abs(max - enemy.x) <= Settings.epsilon) {
+            target = min;
         }
+        if (abs(min - enemy.x) <= Settings.epsilon) {
+            target = max;
+        }
+        const s = sign(target - enemy.x);
+        enemy.speed.x = s * Settings.enemySpeedX;
+        enemy.x += enemy.speed.x * delta;
     };
 }
