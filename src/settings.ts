@@ -28,6 +28,7 @@ export const Settings = {
     playerCollisionGrid: 16 * 10,
 
     enemySpeedX: 40,
+    enemyWalkCycleFrames: 6,
 
     tileSpeedY: 40,
 

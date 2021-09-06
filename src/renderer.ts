@@ -185,3 +185,5 @@ function atlasRender() {
     destinationContext = atlasContext;
     destinationContext.drawImage(atlas, 0, 0);
 }
+
+export function spriteEquals(s1: Sprite, s2: Sprite) { return s1.x == s2.x && s1.y && s2.y; }

@@ -1,5 +1,5 @@
 import { getTileSprite, Tile, tiles } from "./tile";
-import { createPatrol, enemies, Enemy, enemyHumanIdleSprite, EnemyState, EnemyType } from "./enemy";
+import { createPatrol, enemies, Enemy, enemyHumanIdleSprite, EnemyState } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
 import { cows, cowSprite } from "./cow";
@@ -73,7 +73,7 @@ export function load() {
                     hFlip: false,
                     speed: zero(),
                     state: EnemyState.Idle,
-                    type: data.id == Id.enenemy_human_butcher ? EnemyType.Human : data.id == Id.ennemy_butcher ? EnemyType.Butcher : EnemyType.Shield,
+                    id: data.id,
                     animation: createLinear(1, 0, 50),
                     sprite: { ...enemyHumanIdleSprite },
                     colorized: true
