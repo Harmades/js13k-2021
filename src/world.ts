@@ -1,4 +1,4 @@
-import { getTileSprite, tiles } from "./tile";
+import { getTileSprite, Tile, tiles } from "./tile";
 import { createPatrol, enemies, Enemy, enemyHumanIdleSprite, EnemyState, EnemyType } from "./enemy";
 import { zero } from "./vector";
 import { floor } from "./alias";
@@ -7,6 +7,7 @@ import { Settings } from "./settings";
 import { createLinear } from "./animation";
 import { level } from "../gen/level";
 import { Id } from "../gen/id";
+import { createTilePatrol, MovingTile, movingTiles } from "./movingTile";
 
 type Data = {
     id: number;
@@ -29,7 +30,7 @@ export function load() {
             if (isTile(data.id)) {
                 const adjacentTiles = getAdjacentTiles(i, dataArray, worldWidth, worldHeight);
                 const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile);
-                tiles.push({
+                const tile: Tile = {
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
                     w: Settings.tileSize,
@@ -39,7 +40,24 @@ export function load() {
                     hFlip: data.hFlip,
                     vFlip: data.vFlip,
                     dFlip: data.dFlip,
-                });
+                };
+                tiles.push(tile);
+            }
+            if (data.id == Id.moving_platform) {
+                const tile: MovingTile = {
+                    x: x * Settings.tileSize,
+                    y: y * Settings.tileSize,
+                    w: Settings.tileSize,
+                    h: Settings.tileSize,
+                    collision: true,
+                    id: data.id,
+                    hFlip: data.hFlip,
+                    vFlip: data.vFlip,
+                    dFlip: data.dFlip,
+                };
+                const [min, max] = getTilePatrol(i, patrolArray, worldWidth, worldHeight);
+                tile.patrol = createTilePatrol(tile, min * Settings.tileSize, max * Settings.tileSize);
+                movingTiles.push(tile);
             }
             if (isEnemy(data.id)) {
                 const [min, max] = getPatrol(i, patrolArray, worldWidth, worldHeight);
@@ -74,9 +92,26 @@ export function load() {
     }
 }
 
+function getTilePatrol(index: number, dataArray: Data[], layerWidth: number, layerHeight: number) {
+    let max = floor(index / layerWidth);
+    let min = max;
+    let [left, right, up, down] = getAdjacentTilesIndices(index, layerWidth, layerHeight);
+    while (up != null) {
+        const upData = dataArray[up];
+        if (upData.id == Id.range_patrol) {
+            [left, right, up, down] = getAdjacentTilesIndices(up, layerWidth, layerHeight);
+        } else {
+            [left, right, up, down] = getAdjacentTilesIndices(up, layerWidth, layerHeight);
+            min = floor(down! / layerWidth);
+            up = null;
+        }
+    }
+    return [min, max];
+}
+
 function getPatrol(index: number, dataArray: Data[], layerWidth: number, layerHeight: number) {
     let min = index % layerWidth;
-    let max = index % layerWidth;
+    let max = min;
     let [left, right] = getAdjacentTilesIndices(index, layerWidth, layerHeight);
     let _ = null;
     while (left != null || right != null) {

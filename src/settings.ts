@@ -15,8 +15,8 @@ export const Settings = {
     engineTimeResolution: 1,
     gravity: 500,
 
-    playerSpawnX: 97 * 16,
-    playerSpawnY: 87 * 16,
+    playerSpawnX: 150 * 16,
+    playerSpawnY: 69 * 16,
     playerSpeedX: 50,
     playerSpeedY: 300,
     playerDashSpeedX: 150,
@@ -28,6 +28,8 @@ export const Settings = {
     playerCollisionGrid: 16 * 10,
 
     enemySpeedX: 40,
+
+    tileSpeedY: 40,
 
     bulletSpeedX: 100,
     bulletLifetime: 1000,

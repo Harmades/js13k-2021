@@ -4,6 +4,7 @@ import * as Player from "./player";
 import * as Enemy from "./enemy";
 import * as Bullets from "./bullet";
 import * as Tile from "./tile";
+import * as MovingTile from "./movingTile";
 import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
@@ -39,7 +40,8 @@ export function update(delta: number) {
     Enemy.update(delta);
     Bullets.update(delta);
     Tile.update(delta);
-    Physics.update(Player.player, Tile.tiles, Enemy.enemies);
+    MovingTile.update(delta);
+    Physics.update(delta);
     Input.update(delta);
 }
 

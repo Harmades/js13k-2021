@@ -8,7 +8,7 @@ export type Tile = Rectangle & {
     id: number,
     hFlip: boolean,
     vFlip: boolean,
-    dFlip: boolean
+    dFlip: boolean,
 }
 
 const floorSprite = {
@@ -56,10 +56,10 @@ const windowCornerSprite = {
     y: 5 * Settings.tileSize
 };
 
+
 export let tiles: Tile[] = [];
 
-export function update(delta: number) {
-}
+export function update(delta: number) { }
 
 export function render() {
     for (const tile of tiles) {

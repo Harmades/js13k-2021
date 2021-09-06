@@ -9,6 +9,7 @@ import * as Camera from "./camera";
 import * as Cow from "./cow";
 import * as Ui from "./ui";
 import * as Light from "./light";
+import * as MovingTile from "./movingTile";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import { createElement, floor, getElementById, PI, round, sign } from "./alias";
@@ -159,6 +160,7 @@ export function render() {
     Player.render();
     Cow.render();
     Light.render();
+    MovingTile.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);

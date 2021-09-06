@@ -102,7 +102,7 @@ function getSprite(enemy: Enemy) {
 
 export function update(delta: number) {
     for (const enemy of enemies) {
-        if (enemy.patrol) enemy.patrol(delta);
+        if (enemy.patrol && enemy.state != EnemyState.Dead) enemy.patrol(delta);
     }
 }
 

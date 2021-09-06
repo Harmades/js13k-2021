@@ -1,13 +1,14 @@
 import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
-import { bulletHit, Enemy, enemyCollide } from "./enemy";
+import { bulletHit, enemies, Enemy, enemyCollide } from "./enemy";
 import { abs, sign } from "./alias";
-import { Tile } from "./tile";
-import { collect, collide, playerDie } from "./player";
+import { Tile, tiles } from "./tile";
+import { collect, collide, player, playerDie } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
 import { Id } from "../gen/id";
+import { movingTiles } from "./movingTile";
 
 export type Collision = Rectangle;
 
@@ -26,8 +27,8 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
     };
 }
 
-export function update(player: Rectangle, platforms: Tile[], enemies: Enemy[]) {
-    for (const platform of getEntitiesNearEntity(player, platforms)) {
+export function update(delta: number) {
+    for (const platform of getEntitiesNearEntity(player, [...tiles, ...movingTiles])) {
         if (!platform.collision) continue;
         const collision = getCollision(player, platform)
         if (collision != null) {
