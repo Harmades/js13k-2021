@@ -3,15 +3,21 @@ import { draw } from "./renderer";
 import { Settings } from "./settings";
 import { Tile } from "./tile";
 
-export type MovingTile = Tile & {
+export type DynamicTile = Tile & {
     patrol?: (delta: number) => void;
+    breakable: boolean;
+    broken: boolean
 }
 
-export const movingTiles: MovingTile[] = [];
+export const movingTiles: DynamicTile[] = [];
 
 const movingPlatformSprite = {
     x: 4 * Settings.tileSize,
     y: 4 * Settings.tileSize
+};
+const crackedSprite = {
+    x: 2 * Settings.tileSize,
+    y: 2 * Settings.tileSize
 };
 
 export function update(delta: number) {
@@ -22,7 +28,9 @@ export function update(delta: number) {
 
 export function render() {
     for (const tile of movingTiles) {
-        draw({ ...tile, ...movingPlatformSprite }, tile);
+        if (tile.broken) continue;
+        const sprite = tile.breakable ? crackedSprite : movingPlatformSprite;
+        draw({ ...tile, ...sprite }, tile);
     }
 }
 
@@ -38,4 +46,11 @@ export function createTilePatrol(tile: Tile, min: number, max: number) {
         const s = sign(target - tile.y);
         tile.y += s * Settings.tileSpeedY * delta;
     };
+}
+
+export function attackHit(tile: DynamicTile) {
+    if (!tile.broken && tile.breakable) {
+        tile.broken = true;
+        tile.collision = false;
+    }
 }

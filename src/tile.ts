@@ -74,7 +74,6 @@ export function getTileSprite(id: number): Sprite | null {
     if (id == Id.intern_floor_tile) return innerSprite;
     if (id == Id.spikes) return spikesSprite;
     if (id == Id.knifes) return knivesSprite;
-    if (id == Id.cracked_intern_floor_tile) return floorSprite;
     if (id == Id.aprons) return apronsSprite;
     if (id == Id.blood1) return blood1Sprite;
     if (id == Id.blood2) return blood2Sprite;

@@ -9,7 +9,7 @@ import * as Camera from "./camera";
 import * as Cow from "./cow";
 import * as Ui from "./ui";
 import * as Light from "./light";
-import * as MovingTile from "./movingTile";
+import * as MovingTile from "./dynamicTile";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import { createElement, floor, getElementById, PI, round, sign } from "./alias";

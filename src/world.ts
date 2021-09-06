@@ -7,7 +7,7 @@ import { Settings } from "./settings";
 import { createLinear } from "./animation";
 import { level } from "../gen/level";
 import { Id } from "../gen/id";
-import { createTilePatrol, MovingTile, movingTiles } from "./movingTile";
+import { createTilePatrol, DynamicTile, movingTiles } from "./dynamicTile";
 
 type Data = {
     id: number;
@@ -39,12 +39,12 @@ export function load() {
                     id: data.id,
                     hFlip: data.hFlip,
                     vFlip: data.vFlip,
-                    dFlip: data.dFlip,
+                    dFlip: data.dFlip
                 };
                 tiles.push(tile);
             }
-            if (data.id == Id.moving_platform) {
-                const tile: MovingTile = {
+            if (data.id == Id.moving_platform || data.id == Id.cracked_intern_floor_tile) {
+                const tile: DynamicTile = {
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
                     w: Settings.tileSize,
@@ -54,9 +54,13 @@ export function load() {
                     hFlip: data.hFlip,
                     vFlip: data.vFlip,
                     dFlip: data.dFlip,
+                    breakable: data.id == Id.cracked_intern_floor_tile,
+                    broken: false
                 };
-                const [min, max] = getTilePatrol(i, patrolArray, worldWidth, worldHeight);
-                tile.patrol = createTilePatrol(tile, min * Settings.tileSize, max * Settings.tileSize);
+                if (data.id == Id.moving_platform) {
+                    const [min, max] = getTilePatrol(i, patrolArray, worldWidth, worldHeight);
+                    tile.patrol = createTilePatrol(tile, min * Settings.tileSize, max * Settings.tileSize);
+                }
                 movingTiles.push(tile);
             }
             if (isEnemy(data.id)) {

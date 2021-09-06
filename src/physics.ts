@@ -1,14 +1,14 @@
 import { bulletCollide, bullets } from "./bullet";
 import { cows, disable } from "./cow";
-import { bulletHit, enemies, Enemy, enemyCollide } from "./enemy";
+import { bulletHit, enemies, enemyCollide } from "./enemy";
 import { abs, sign } from "./alias";
-import { Tile, tiles } from "./tile";
-import { collect, collide, player, playerDie } from "./player";
+import { tiles } from "./tile";
+import { collect, player, playerCollide } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
+import { attackHit, DynamicTile, movingTiles } from "./dynamicTile";
 import { Id } from "../gen/id";
-import { movingTiles } from "./movingTile";
 
 export type Collision = Rectangle;
 
@@ -28,19 +28,19 @@ export function getCollision(rectangle1: Rectangle, rectangle2: Rectangle): Coll
 }
 
 export function update(delta: number) {
-    for (const platform of getEntitiesNearEntity(player, [...tiles, ...movingTiles])) {
-        if (!platform.collision) continue;
-        const collision = getCollision(player, platform)
+    for (const tile of getEntitiesNearEntity(player, [...tiles, ...movingTiles])) {
+        if (!tile.collision) continue;
+        const collision = getCollision(player, tile)
         if (collision != null) {
-            const translationVector = getTranslationVector(player, platform, collision);
+            const translationVector = getTranslationVector(player, tile, collision);
             add(player, translationVector);
-            if (platform.id == Id.spikes) playerDie();
-            else collide(translationVector);
+            playerCollide(translationVector, tile);
         }
-        for (const bullet of getEntitiesNearEntity(platform, bullets)) {
-            const platformBulletCollision = getCollision(platform, bullet);
+        for (const bullet of getEntitiesNearEntity(tile, bullets)) {
+            const platformBulletCollision = getCollision(tile, bullet);
             if (platformBulletCollision != null) {
                 bulletCollide(bullet);
+                if (tile.id == Id.cracked_intern_floor_tile) attackHit(tile as DynamicTile);
             }
         }
     }
@@ -48,8 +48,6 @@ export function update(delta: number) {
     for (const enemy of getEntitiesNearEntity(player, enemies)) {
         const collision = getCollision(player, enemy)
         if (collision != null) {
-            const translationVector = getTranslationVector(player, enemy, collision);
-            add(player, translationVector);
             enemyCollide(enemy);
         }
         for (const bullet of getEntitiesNearEntity(enemy, bullets)) {

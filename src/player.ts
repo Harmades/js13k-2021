@@ -6,6 +6,9 @@ import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
 import { createCounter, createLinear } from "./animation";
 import { shut, track } from "./camera";
+import { Tile } from "./tile";
+import { attackHit, DynamicTile } from "./dynamicTile";
+import { Id } from "../gen/id";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -159,14 +162,18 @@ export function update(delta: number) {
     track(player);
 }
 
-export function collide(translationVector: Vector) {
-    if (translationVector.x != 0) {
-        player.speed.x = 0
+export function playerCollide(translationVector: Vector, tile: Tile) {
+    if (player.state == PlayerState.Dash && tile.id == Id.cracked_intern_floor_tile) {
+        attackHit(tile as DynamicTile);
+    } else {
+        if (translationVector.x != 0) {
+            player.speed.x = 0
+        }
+        if (translationVector.y < 0) {
+            currentGravity = 0;
+        }
+        if (translationVector.y != 0) player.speed.y = 0;
     }
-    if (translationVector.y < 0) {
-        currentGravity = 0;
-    }
-    if (translationVector.y != 0) player.speed.y = 0;
 }
 
 export function playerDie() {

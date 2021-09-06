@@ -4,7 +4,7 @@ import * as Player from "./player";
 import * as Enemy from "./enemy";
 import * as Bullets from "./bullet";
 import * as Tile from "./tile";
-import * as MovingTile from "./movingTile";
+import * as MovingTile from "./dynamicTile";
 import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
