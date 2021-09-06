@@ -2,11 +2,13 @@ import { abs, sign } from "./alias";
 import { draw } from "./renderer";
 import { Settings } from "./settings";
 import { Tile } from "./tile";
+import { Vector } from "./vector";
 
 export type DynamicTile = Tile & {
     patrol?: (delta: number) => void;
     breakable: boolean;
-    broken: boolean
+    broken: boolean;
+    speed: Vector;
 }
 
 export const movingTiles: DynamicTile[] = [];
@@ -34,7 +36,7 @@ export function render() {
     }
 }
 
-export function createTilePatrol(tile: Tile, min: number, max: number) {
+export function createTilePatrol(tile: DynamicTile, min: number, max: number) {
     let target = -1;
     return (delta: number) => {
         if (abs(max - tile.y) <= Settings.epsilon) {
@@ -44,7 +46,8 @@ export function createTilePatrol(tile: Tile, min: number, max: number) {
             target = max;
         }
         const s = sign(target - tile.y);
-        tile.y += s * Settings.tileSpeedY * delta;
+        tile.speed.y = s * Settings.tileSpeedY;
+        tile.y += tile.speed.y * delta;
     };
 }
 

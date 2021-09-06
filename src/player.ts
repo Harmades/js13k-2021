@@ -9,6 +9,7 @@ import { shut, track } from "./camera";
 import { Tile } from "./tile";
 import { attackHit, DynamicTile } from "./dynamicTile";
 import { Id } from "../gen/id";
+import { abs, ceil, floor, round } from "./alias";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -60,12 +61,12 @@ let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
 const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
 const dashCounter = createCounter(Settings.playerDashFrames);
-let jumpCounter = 0;
 const morphKeyPress = createReleasedKeyPress("shift");
 const spaceKeyPress = createReleasedKeyPress("space");
 const jumpKeyPress = createReleasedKeyPress("up");
 const trails: Player[] = [];
 let animation = createLinear(1, 0, 50);
+let snapTo: Tile | null = null;
 
 
 
@@ -123,16 +124,20 @@ export function update(delta: number) {
     if (player.state == PlayerState.Airborne && currentGravity == 0 && player.speed.y == 0) {
         player.state = PlayerState.Running;
         dashExhausted = false;
-        jumpCounter = 0;
     }
     if (player.state == PlayerState.Dash && dashCounter()) {
         player.state = PlayerState.Airborne;
         dashExhausted = true;
     }
 
-    if (jumpKeyPress() && jumpCounter < 2) {
+    if (snapTo != null) {
+        player.state = player.speed.x == 0 ? PlayerState.Idle : PlayerState.Running;
+        player.y = snapTo.y - Settings.tileSize;
+        if (abs(player.x - snapTo.x) > Settings.tileSize) snapTo = null;
+    }
+    if (jumpKeyPress() && player.state != PlayerState.Airborne) {
         player.speed.y = -Settings.playerSpeedY;
-        jumpCounter++;
+        snapTo = null;
     } else {
         player.speed.y += currentGravity * delta;
     }
@@ -174,6 +179,7 @@ export function playerCollide(translationVector: Vector, tile: Tile) {
         }
         if (translationVector.y != 0) player.speed.y = 0;
     }
+    if (tile.id == Id.spikes) playerDie();
 }
 
 export function playerDie() {
@@ -196,3 +202,8 @@ export function resurrect() {
 }
 
 export function collect() { player.cows++; }
+
+export function playerSnap(tile: DynamicTile | null) {
+    if (tile != null && tile.speed.y > 0) snapTo = tile;
+    else snapTo = null;
+}

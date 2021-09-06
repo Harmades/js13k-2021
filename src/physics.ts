@@ -3,7 +3,7 @@ import { cows, disable } from "./cow";
 import { bulletHit, enemies, enemyCollide } from "./enemy";
 import { abs, sign } from "./alias";
 import { tiles } from "./tile";
-import { collect, player, playerCollide } from "./player";
+import { collect, player, playerCollide, playerSnap } from "./player";
 import { getCenter, Rectangle } from "./rectangle";
 import { Settings } from "./settings";
 import { add, Vector } from "./vector";
@@ -35,6 +35,7 @@ export function update(delta: number) {
             const translationVector = getTranslationVector(player, tile, collision);
             add(player, translationVector);
             playerCollide(translationVector, tile);
+            if (tile.id == Id.moving_platform) playerSnap(tile as DynamicTile);
         }
         for (const bullet of getEntitiesNearEntity(tile, bullets)) {
             const platformBulletCollision = getCollision(tile, bullet);

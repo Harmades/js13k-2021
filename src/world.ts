@@ -29,7 +29,7 @@ export function load() {
             const y = floor(i / worldWidth);
             if (isTile(data.id)) {
                 const adjacentTiles = getAdjacentTiles(i, dataArray, worldWidth, worldHeight);
-                const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile);
+                const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile) || data.id == Id.spikes;
                 const tile: Tile = {
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
@@ -55,7 +55,8 @@ export function load() {
                     vFlip: data.vFlip,
                     dFlip: data.dFlip,
                     breakable: data.id == Id.cracked_intern_floor_tile,
-                    broken: false
+                    broken: false,
+                    speed: zero()
                 };
                 if (data.id == Id.moving_platform) {
                     const [min, max] = getTilePatrol(i, patrolArray, worldWidth, worldHeight);
