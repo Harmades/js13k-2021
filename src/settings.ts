@@ -15,8 +15,8 @@ export const Settings = {
     engineTimeResolution: 1,
     gravity: 500,
 
-    playerSpawnX: 150 * 16,
-    playerSpawnY: 69 * 16,
+    playerSpawnX: 153 * 16,
+    playerSpawnY: 35 * 16,
     playerSpeedX: 75,
     playerSpeedY: 250,
     playerDashSpeedX: 150,
@@ -36,4 +36,6 @@ export const Settings = {
     bulletLifetime: 1000,
 
     epsilon: 0.1,
+    endX: 183 * 16,
+    endY: 12 * 16
 }

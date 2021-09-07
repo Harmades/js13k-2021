@@ -128,8 +128,8 @@ export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Re
     destinationContext.restore();
 }
 
-export function drawText(text: string, { x, y }: Vector) {
-    cameraContext.font = "12px sans-serif";
+export function drawText(text: string, size: number, { x, y }: Vector) {
+    cameraContext.font = `${size}px sans-serif`;
     cameraContext.fillStyle = "#FFFFEB";
     cameraContext.fillText(text, x, y);
 }
