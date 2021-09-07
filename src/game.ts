@@ -9,8 +9,11 @@ import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
 import { floor } from "./alias";
+import * as Songs from "./sounds"
 
+Songs.load();
 World.load();
+Songs.play_cowboy();
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
@@ -25,7 +28,7 @@ export function loop(tFrame: number) {
         var elapsed = tFrame - lastTick;
         numTicks = floor(elapsed / tickLength);
     }
-    
+
     for (var i = 0; i < numTicks; i++) {
         lastTick += tickLength;
         update(tickLength / 1000);
