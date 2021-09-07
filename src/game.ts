@@ -5,6 +5,8 @@ import * as Enemy from "./enemy";
 import * as Bullets from "./bullet";
 import * as Tile from "./tile";
 import * as MovingTile from "./dynamicTile";
+import * as Lava from "./lava";
+import * as Timer from "./timer";
 import * as Physics from "./physics";
 import * as Input from "./input";
 import * as World from "./world";
@@ -44,8 +46,10 @@ export function update(delta: number) {
     Bullets.update(delta);
     Tile.update(delta);
     MovingTile.update(delta);
+    Lava.update(delta);
     Physics.update(delta);
     Input.update(delta);
+    Timer.update(delta);
 }
 
 export function render() {

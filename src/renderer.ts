@@ -10,6 +10,7 @@ import * as Cow from "./cow";
 import * as Ui from "./ui";
 import * as Light from "./light";
 import * as MovingTile from "./dynamicTile";
+import * as Lava from "./lava";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
 import { createElement, floor, getElementById, PI, round, sign } from "./alias";
@@ -121,7 +122,7 @@ export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Re
     offscreenContext.drawImage(atlas, sx, sy, Settings.tileSize, Settings.tileSize, 0, 0, Settings.tileSize, Settings.tileSize);
     const pattern = destinationContext.createPattern(offscreenContext.canvas, "repeat");
     destinationContext.save();
-    destinationContext.translate(dx, dy);
+    destinationContext.translate(round(dx), round(dy));
     if (pattern == null) throw new Error();
     destinationContext.fillStyle = pattern;
     destinationContext.fillRect(0, 0, w, h);
@@ -161,6 +162,7 @@ export function render() {
     Cow.render();
     Light.render();
     MovingTile.render();
+    Lava.render();
     sourceContext = playerContext;
     destinationContext = cameraContext;
     destinationContext.clearRect(0, 0, Settings.width, Settings.height);

@@ -1,9 +1,11 @@
+import { lava } from "./lava";
 import { Rectangle } from "./rectangle";
 import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
 
 export type Cow = Rectangle & {
     collected: boolean;
+    dead: boolean;
     animation: () => number;
     sprite: Sprite;
 };
@@ -19,6 +21,7 @@ export const cows: Cow[] = [];
 
 export function render() {
     for (const cow of cows) {
+        if (cow.y >= lava.y) cow.dead = true;
         if (cow.collected) {
             const current = cow.animation();
             cow.sprite.h = current * 16;

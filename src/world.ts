@@ -90,6 +90,7 @@ export function load() {
                     w: Settings.tileSize,
                     h: Settings.tileSize,
                     collected: false,
+                    dead: false,
                     animation: createLinear(1, 0, 50),
                     sprite: { ...cowSprite }
                 })

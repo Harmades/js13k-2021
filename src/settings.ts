@@ -15,8 +15,8 @@ export const Settings = {
     engineTimeResolution: 1,
     gravity: 500,
 
-    playerSpawnX: 153 * 16,
-    playerSpawnY: 35 * 16,
+    playerSpawnX: 77 * 16,
+    playerSpawnY: 88 * 16,
     playerSpeedX: 75,
     playerSpeedY: 250,
     playerDashSpeedX: 150,
@@ -37,5 +37,8 @@ export const Settings = {
 
     epsilon: 0.1,
     endX: 183 * 16,
-    endY: 12 * 16
+    endY: 12 * 16,
+
+    lavaSpeedY: 10,
+    timer: 5 * 60
 }

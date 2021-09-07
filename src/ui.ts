@@ -4,7 +4,8 @@ import * as Camera from "./camera";
 import { Settings } from "./settings";
 import { cows, cowSprite } from "./cow";
 import { getCenter } from "./rectangle";
-import { abs } from "./alias";
+import { abs, floor } from "./alias";
+import { currentTime } from "./timer";
 
 const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
@@ -15,9 +16,13 @@ const uiFrame = {
 };
 
 const scorePosition = {
-    x: 190,
-    y: 20
+    x: 190 + cowSprite.w / 2,
+    y: 20 + cowSprite.h / 2
 };
+const timerPosition = {
+    x: 15 + cowSprite.w / 2,
+    y: 20 + cowSprite.h / 2
+}
 const sprite = {
     x: cowSprite.x + 5,
     y: cowSprite.y + 5,
@@ -30,7 +35,8 @@ const end = {
     w: 0,
     h: 0,
     text: "🚩",
-    collected: false
+    collected: false,
+    dead: false
 };
 const title = "Space Cowboy";
 
@@ -39,12 +45,13 @@ export function update(delta: number) {
 }
 
 export function render() {
-    draw(cowSprite, { x: scorePosition.x - cowSprite.w / 2, y: scorePosition.y - cowSprite.h / 2 });
-    drawText(` x ${Player.player.cows}`, 12, { x: scorePosition.x + cowSprite.w / 2, y: scorePosition.y + cowSprite.h / 2 });
+    draw(cowSprite, { x: scorePosition.x - cowSprite.w, y: scorePosition.y - cowSprite.h });
+    drawText(` x ${Player.player.cows}`, 12, scorePosition);
+    drawText(`${floor(currentTime / 60)}:${(currentTime % 60 < 10 ? 0 : '')}${floor(currentTime % 60)}`, 12, timerPosition);
     drawRectOutline(uiFrame);
 
     for (const target of [...cows, end]) {
-        if (target.collected) continue;
+        if (target.collected || target.dead) continue;
         const cameraCenter = getCenter(Camera.camera);
         const targetCenter = getCenter(target);
         if (abs(targetCenter.x - cameraCenter.x) > uiFrame.w / 2) {
@@ -74,4 +81,5 @@ export function render() {
             }
         }
     }
+
 }
