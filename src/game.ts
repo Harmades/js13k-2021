@@ -11,9 +11,9 @@ import * as World from "./world";
 import { floor } from "./alias";
 import * as Songs from "./sounds"
 
-Songs.load();
+// Songs.load();
 World.load();
-Songs.play_cowboy();
+// Songs.play_cowboy();
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();

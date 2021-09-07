@@ -30,11 +30,12 @@ export function load() {
             if (isTile(data.id)) {
                 const adjacentTiles = getAdjacentTiles(i, dataArray, worldWidth, worldHeight);
                 const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile) || data.id == Id.spikes;
+                const offset = data.id == Id.spikes ? 8 : 0;
                 const tile: Tile = {
                     x: x * Settings.tileSize,
-                    y: y * Settings.tileSize,
+                    y: y * Settings.tileSize + offset,
                     w: Settings.tileSize,
-                    h: Settings.tileSize,
+                    h: Settings.tileSize - offset,
                     collision: collision,
                     id: data.id,
                     hFlip: data.hFlip,

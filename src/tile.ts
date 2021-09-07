@@ -25,7 +25,8 @@ const spikesSprite = {
 };
 const knivesSprite = {
     x: 2 * Settings.tileSize,
-    y: 4 * Settings.tileSize
+    y: 4 * Settings.tileSize,
+    h: 12
 };
 const apronsSprite = {
     x: 0 * Settings.tileSize,
