@@ -1,6 +1,6 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { draw, Sprite } from "./renderer";
+import { draw, drawRectOutline, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
@@ -55,6 +55,17 @@ const cowDashSprite = {
     y: 1 * Settings.tileSize,
     w: 2 * Settings.tileSize
 };
+const humanHitbox = {
+    w: 14,
+    h: Settings.tileSize,
+    y: 0
+};
+const cowHitbox = {
+    w: Settings.tileSize,
+    h: 12,
+    y: 4
+};
+
 let currentGravity = 0;
 let dashExhausted = false;
 let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
@@ -68,13 +79,11 @@ const trails: Player[] = [];
 let animation = createLinear(1, 0, 50);
 let snapTo: Tile | null = null;
 
-
-
 export const player: Player = {
     x: Settings.playerSpawnX,
     y: Settings.playerSpawnY,
-    w: 15,
-    h: Settings.tileSize,
+    w: humanHitbox.w,
+    h: humanHitbox.h,
     speed: { x: 0, y: 0 },
     state: PlayerState.Airborne,
     combatState: PlayerCombatState.Human,
@@ -132,7 +141,7 @@ export function update(delta: number) {
 
     if (snapTo != null) {
         player.state = player.speed.x == 0 ? PlayerState.Idle : PlayerState.Running;
-        player.y = snapTo.y - Settings.tileSize;
+        player.y = snapTo.y - player.h;
         if (abs(player.x - snapTo.x) > Settings.tileSize) snapTo = null;
     }
     if (jumpKeyPress() && player.state != PlayerState.Airborne) {
@@ -157,7 +166,21 @@ export function update(delta: number) {
         player.speed.x = player.hFlip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
     }
-    if (morphKeyPress()) player.combatState = player.combatState == PlayerCombatState.Human ? PlayerCombatState.Cow : PlayerCombatState.Human;
+    if (morphKeyPress()) {
+        if (player.combatState == PlayerCombatState.Human) {
+            player.combatState = PlayerCombatState.Cow;
+            player.sprite = cowIdleSprite;
+            player.y += cowHitbox.y;
+            player.w = cowHitbox.w;
+            player.h = cowHitbox.h;
+        } else {
+            player.combatState = PlayerCombatState.Human;
+            player.sprite = humanIdleSprite;
+            player.y -= cowHitbox.y;
+            player.w = humanHitbox.w;
+            player.h = humanHitbox.h;
+        }
+    }
 
     player.x += player.speed.x * delta;
     player.y += player.speed.y * delta;
@@ -177,7 +200,8 @@ export function playerCollide(translationVector: Vector, tile: Tile) {
         if (translationVector.y < 0) {
             currentGravity = 0;
         }
-        if (translationVector.y != 0) player.speed.y = 0;
+        if (translationVector.y < 0 && player.speed.y > 0
+            || translationVector.y > 0 && player.speed.y < 0) player.speed.y = 0;
     }
     if (tile.id == Id.spikes) playerDie();
 }
@@ -203,7 +227,7 @@ export function resurrect() {
 
 export function collect() { player.cows++; }
 
-export function playerSnap(tile: DynamicTile | null) {
-    if (tile != null && tile.speed.y > 0) snapTo = tile;
+export function playerSnap(tile: DynamicTile | null, translationVector: Vector) {
+    if (tile != null && tile.speed.y > 0 && translationVector.y < 0) snapTo = tile;
     else snapTo = null;
 }

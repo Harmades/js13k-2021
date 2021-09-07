@@ -70,7 +70,7 @@ function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function draw({ x, y, w = 16, h = 16, hFlip: hFlip = false, vFlip = false, dFlip = false, alpha = 1 }: Sprite, vector: Vector) {
+export function draw({ x, y, w = Settings.tileSize, h = Settings.tileSize, hFlip: hFlip = false, vFlip = false, dFlip = false, alpha = 1 }: Sprite, vector: Vector) {
     if (!atlas.complete) return;
     destinationContext.save();
     destinationContext.globalAlpha = alpha;
@@ -91,7 +91,7 @@ export function draw({ x, y, w = 16, h = 16, hFlip: hFlip = false, vFlip = false
             destinationContext.scale(-1, 1);
             destinationContext.rotate(PI / 2);
         } else {
-            destinationContext.translate(Settings.tileSize, 0);
+            destinationContext.translate(w, 0);
             destinationContext.rotate(PI / 2);
         }
     }
@@ -138,7 +138,7 @@ export function cameraRender({ x, y, w, h, ox, oy, colorized }: Camera.Camera) {
     if (!colorized) {
         destinationContext.save();
     }
-    const cx = floor(x) + ox;
+    const cx = round(x) + ox;
     const cy = round(y) + oy;
     destinationContext.drawImage(backgroundContext.canvas, round(x * 0.4) + ox, round(y * 0.4) + oy, w, h, ox, oy, w, h);
     destinationContext.drawImage(staticContext.canvas, cx, cy, w, h, ox, oy, w, h);

@@ -35,7 +35,7 @@ export function update(delta: number) {
             const translationVector = getTranslationVector(player, tile, collision);
             add(player, translationVector);
             playerCollide(translationVector, tile);
-            if (tile.id == Id.moving_platform) playerSnap(tile as DynamicTile);
+            if (tile.id == Id.moving_platform) playerSnap(tile as DynamicTile, translationVector);
         }
         for (const bullet of getEntitiesNearEntity(tile, bullets)) {
             const platformBulletCollision = getCollision(tile, bullet);
