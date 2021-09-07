@@ -20,6 +20,7 @@ World.load();
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
 let lastRender = lastTick;
+let complete = false;
 
 export function loop(tFrame: number) {
     window.requestAnimationFrame(t => loop(t));
@@ -41,6 +42,7 @@ export function loop(tFrame: number) {
 }
 
 export function update(delta: number) {
+    if (complete) return;
     Player.update(delta);
     Enemy.update(delta);
     Bullets.update(delta);
@@ -54,4 +56,8 @@ export function update(delta: number) {
 
 export function render() {
     Renderer.render();
+}
+
+export function stop() {
+    complete = true;
 }

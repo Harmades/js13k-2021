@@ -4,8 +4,9 @@ import * as Camera from "./camera";
 import { Settings } from "./settings";
 import { cows, cowSprite } from "./cow";
 import { getCenter } from "./rectangle";
-import { abs, floor } from "./alias";
+import { abs, floor, getElementById } from "./alias";
 import { currentTime } from "./timer";
+import * as Game from "./game";
 
 const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
@@ -82,4 +83,24 @@ export function render() {
         }
     }
 
+}
+
+export function gg() {
+    Game.stop();
+    getElementById("ui")!.style.display = "block";
+    getElementById("ui-text")!.innerHTML = `
+    Congratulations! You completed Space Cowboy.<br/><br/>
+    You saved ${Player.player.cows} cows.<br/>
+
+    Game made with love by:<br/><br/>
+    Adrian Lissot<br/>
+    Barthélémy Renucci<br/>
+    Florent Perez<br/>
+    `;
+}
+
+export function notGg() {
+    Game.stop();
+    getElementById("ui")!.style.display = "block";
+    getElementById("ui-text")!.innerHTML = "You died in lava.<br/><br/>Miserably.<br/><br/>Press F5 to restart the game.";
 }

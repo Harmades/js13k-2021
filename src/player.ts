@@ -9,7 +9,9 @@ import { shut, track } from "./camera";
 import { Tile } from "./tile";
 import { attackHit, DynamicTile } from "./dynamicTile";
 import { Id } from "../gen/id";
-import { abs, ceil, floor, round } from "./alias";
+import { abs, ceil, floor, getElementById, round } from "./alias";
+import { gg, notGg } from "./ui";
+import { lava } from "./lava";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -188,6 +190,12 @@ export function update(delta: number) {
     currentGravity = Settings.gravity;
 
     track(player);
+
+    if (abs(player.x - Settings.endX) < Settings.tileSize / 2
+        && abs(player.y - Settings.endY) < Settings.tileSize / 2) {
+        gg();
+    }
+    if (player.y > lava.y) notGg();
 }
 
 export function playerCollide(translationVector: Vector, tile: Tile) {

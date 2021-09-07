@@ -24,5 +24,5 @@ export function update(delta: number) {
 }
 
 export function render() {
-    drawGradientCircle(light);
+    // drawGradientCircle(light);
 }
