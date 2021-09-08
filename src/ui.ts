@@ -7,6 +7,7 @@ import { getCenter } from "./rectangle";
 import { abs, floor, getElementById } from "./alias";
 import { currentTime } from "./timer";
 import * as Game from "./game";
+import { play_cowboy } from "./sounds";
 
 const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
@@ -39,7 +40,6 @@ const end = {
     collected: false,
     dead: false
 };
-const title = "Space Cowboy";
 
 export function update(delta: number) {
 
@@ -101,6 +101,22 @@ export function gg() {
 
 export function notGg() {
     Game.stop();
-    getElementById("ui")!.style.display = "block";
     getElementById("ui-text")!.innerHTML = "You died in lava.<br/><br/>Miserably.<br/><br/>Press F5 to restart the game.";
+    getElementById("ui")!.style.display = "block";
+}
+
+export function showStartScreen() {
+    const listener = () => {
+        hideUiScreen();
+        play_cowboy();
+        Game.start();
+        removeEventListener("keyup", listener);
+    }
+    addEventListener("keyup", listener);
+    getElementById("ui-text")!.innerHTML = "Press SPACE to start Space Cowboy.";
+    getElementById("ui")!.style.display = "block";
+}
+
+export function hideUiScreen() {
+    getElementById("ui")!.style.display = "none";
 }

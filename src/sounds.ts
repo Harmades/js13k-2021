@@ -100,6 +100,7 @@ export function load() {
 }
 
 export function play_cowboy() {
+  zzfxX.resume();
   audio_node = zzfxP(...cowboy_song);
   audio_node.loop = true;
 }

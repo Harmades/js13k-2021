@@ -12,15 +12,16 @@ import * as Input from "./input";
 import * as World from "./world";
 import { floor } from "./alias";
 import * as Songs from "./sounds"
-
-// Songs.load();
-World.load();
-// Songs.play_cowboy();
+import { showStartScreen } from "./ui";
 
 let tickLength = Settings.engineTimeResolution;
 let lastTick = performance.now();
 let lastRender = lastTick;
-let complete = false;
+let running = false;
+
+World.load();
+showStartScreen();
+Songs.load();
 
 export function loop(tFrame: number) {
     window.requestAnimationFrame(t => loop(t));
@@ -42,7 +43,7 @@ export function loop(tFrame: number) {
 }
 
 export function update(delta: number) {
-    if (complete) return;
+    if (!running) return;
     Player.update(delta);
     Enemy.update(delta);
     Bullets.update(delta);
@@ -59,5 +60,9 @@ export function render() {
 }
 
 export function stop() {
-    complete = true;
+    running = false;
+}
+
+export function start() {
+    running = true;
 }
