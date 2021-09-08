@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.5" tiledversion="1.7.2" name="js13k2021" tilewidth="32" tileheight="16" tilecount="25" columns="0">
+<tileset version="1.5" tiledversion="1.7.2" name="js13k2021" tilewidth="32" tileheight="16" tilecount="28" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="16" height="16" source="tiles/bg_tile.png"/>
@@ -77,13 +77,13 @@
   </objectgroup>
  </tile>
  <tile id="27">
-  <image width="32" height="16" source="Characters/charac_cow_dashframe.png"/>
+  <image width="32" height="16" source="characters/charac_cow_dashframe.png"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="4.91304" y="5.08696" width="14.6087" height="10.8696"/>
   </objectgroup>
  </tile>
  <tile id="28">
-  <image width="16" height="16" source="Characters/charac_cow_walkframe.png"/>
+  <image width="16" height="16" source="characters/charac_cow_walkframe.png"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="-0.0434783" y="3.95652" width="14.087" height="12.087"/>
   </objectgroup>
@@ -96,5 +96,14 @@
  </tile>
  <tile id="31">
   <image width="16" height="16" source="tiles/moving_platform.png"/>
+ </tile>
+ <tile id="42">
+  <image width="16" height="16" source="tiles/bg_tile8.png"/>
+ </tile>
+ <tile id="43">
+  <image width="16" height="16" source="characters/charac_cowboy.png"/>
+ </tile>
+ <tile id="44">
+  <image width="8" height="6" source="other/bullet.png"/>
  </tile>
 </tileset>
