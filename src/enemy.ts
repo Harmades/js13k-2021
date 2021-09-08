@@ -6,6 +6,7 @@ import { abs, sign } from "./alias";
 import { draw, Sprite, spriteEquals } from "./renderer";
 import { player, playerDie, PlayerState } from "./player";
 import { Id } from "../gen/id";
+import * as Songs from "./sounds"
 
 export type Enemy = Rectangle & {
     speed: Vector,
@@ -110,12 +111,17 @@ function die(enemy: Enemy) {
 }
 
 export function bulletHit(enemy: Enemy) {
-    if (enemy.id != Id.ennemy_shield_butcher) die(enemy); 
+    if (enemy.id != Id.ennemy_shield_butcher) {
+  	  die(enemy);
+	  Songs.effect_enemy_death();
+    }
 }
 
 export function dashHit(enemy: Enemy) {
-    if (enemy.id != Id.ennemy_butcher) die(enemy);
-    else playerDie();
+    if (enemy.id != Id.ennemy_butcher) {
+	  die(enemy);
+	  Songs.effect_enemy_death();
+  } else playerDie();
 }
 
 export function enemyCollide(enemy: Enemy) {

@@ -13,8 +13,8 @@ import { abs } from "./alias";
 import { gg, notGg } from "./ui";
 import { lava } from "./lava";
 import { getCollision } from "./physics";
-import { play_escape, stop_song } from "./sounds";
 import { Cow } from "./cow";
+import * as Songs from "./sounds"
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -159,6 +159,7 @@ export function update(delta: number) {
     if (jumpKeyPress() && player.state != PlayerState.Airborne) {
         player.speed.y = -Settings.playerSpeedY;
         snapTo = null;
+	    Songs.effect_jump();
     } else {
         player.speed.y += currentGravity * delta;
     }
@@ -173,12 +174,15 @@ export function update(delta: number) {
     if (player.combatState == PlayerCombatState.Human && spaceKeyPress()) {
         const xOffset = player.hFlip ? -8 : Settings.playerBulletSpawnOffsetX;
         spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.hFlip ? -1 : 1, y: 0 });
+        Songs.effect_shoot();
     }
     if (player.combatState == PlayerCombatState.Cow && spaceKeyPress() && !dashExhausted) {
         player.speed.x = player.hFlip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
         player.state = PlayerState.Dash;
+   	    Songs.effect_dash();
     }
     if (morphKeyPress()) {
+	    Songs.effect_transform();
         if (player.combatState == PlayerCombatState.Human) {
             player.combatState = PlayerCombatState.Cow;
             player.sprite = cowIdleSprite;
@@ -204,11 +208,16 @@ export function update(delta: number) {
     if (abs(player.x - Settings.endX) < Settings.tileSize / 2) {
         gg();
     }
-    if (player.y > lava.y) notGg();
+    if (player.y > lava.y) {
+	    Songs.stop_song();
+        Songs.effect_game_over();
+	    Songs.play_cowboy();
+	    notGg();
+    }
 
     if (!leftTutorialZone && getCollision(player, tutorialZone) == null) {
-        stop_song();
-        play_escape();
+        Songs.stop_song();
+        Songs.play_escape();
         leftTutorialZone = true;
     }
 }
@@ -234,6 +243,7 @@ export function playerDie() {
     player.state = PlayerState.Dead;
     animation = createLinear(1, 0, 50);
     player.speed = zero();
+    Songs.effect_death();
     shut();
 }
 
@@ -249,6 +259,7 @@ export function resurrect() {
 }
 
 export function collect(cow: Cow) {
+    Songs.effect_mow();
     currentSpawn = { x: cow.x, y: cow.y };
     player.cows++;
 }
