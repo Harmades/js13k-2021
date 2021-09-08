@@ -27,27 +27,27 @@ export const EnemyState = {
 export let enemies: Enemy[] = []
 
 export const enemyHumanIdleSprite = {
-    x: 4 * Settings.tileSize,
+    x: 3 * Settings.tileSize,
     y: 2 * Settings.tileSize
 };
 const enemyHumanWalkSprite = {
-    x: 2 * Settings.tileSize,
-    y: 3 * Settings.tileSize
-};
-const enemyButcherIdleSprite = {
     x: 0 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
+const enemyButcherIdleSprite = {
+    x: 4 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
 const enemyButcherWalkSprite = {
+    x: 5 * Settings.tileSize,
+    y: 2 * Settings.tileSize
+};
+const enemyShieldIdleSprite = {
     x: 1 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
-const enemyShieldIdleSprite = {
-    x: 3 * Settings.tileSize,
-    y: 3 * Settings.tileSize
-};
 const enemyShieldWalkSprite = {
-    x: 4 * Settings.tileSize,
+    x: 2 * Settings.tileSize,
     y: 3 * Settings.tileSize
 };
 
@@ -55,7 +55,7 @@ const walkCounter = createCounter(Settings.enemyWalkCycleFrames);
 
 export function render() {
     for (const enemy of enemies) {
-        enemy.hFlip = sign(enemy.speed.x) == 1;
+        enemy.hFlip = sign(enemy.speed.x, -1) == 1;
         enemy.sprite = getSprite(enemy);
         if (enemy.state == EnemyState.Dead) {
             const current = enemy.animation();

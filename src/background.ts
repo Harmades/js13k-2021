@@ -3,8 +3,8 @@ import { draw, drawPattern } from "./renderer";
 import { Settings } from "./settings";
 
 const emptySprite = {
-    x: 5 * Settings.tileSize,
-    y: 0 * Settings.tileSize
+    x: 3 * Settings.tileSize,
+    y: 4 * Settings.tileSize
 };
 
 const stars1Sprite = {
@@ -13,7 +13,7 @@ const stars1Sprite = {
 };
 
 const stars2Sprite = {
-    x: 0 * Settings.tileSize,
+    x: 2 * Settings.tileSize,
     y: 5 * Settings.tileSize
 };
 

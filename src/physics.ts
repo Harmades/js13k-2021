@@ -63,7 +63,7 @@ export function update(delta: number) {
     for (const cow of getEntitiesNearEntity(player, cows)) {
         const collision = getCollision(player, cow);
         if (collision != null && !cow.collected) {
-            collect();
+            collect(cow);
             disable(cow);
         }
     }

@@ -14,11 +14,11 @@ export type DynamicTile = Tile & {
 export const movingTiles: DynamicTile[] = [];
 
 const movingPlatformSprite = {
-    x: 4 * Settings.tileSize,
+    x: 2 * Settings.tileSize,
     y: 4 * Settings.tileSize
 };
 const crackedSprite = {
-    x: 2 * Settings.tileSize,
+    x: 1 * Settings.tileSize,
     y: 2 * Settings.tileSize
 };
 

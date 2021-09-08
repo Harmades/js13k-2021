@@ -7,7 +7,7 @@ import { getCenter } from "./rectangle";
 import { abs, floor, getElementById } from "./alias";
 import { currentTime } from "./timer";
 import * as Game from "./game";
-import { play_cowboy } from "./sounds";
+import { play_cowboy, stop_song } from "./sounds";
 
 const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
@@ -87,10 +87,12 @@ export function render() {
 
 export function gg() {
     Game.stop();
+    stop_song();
+    play_cowboy();
     getElementById("ui")!.style.display = "block";
     getElementById("ui-text")!.innerHTML = `
     Congratulations! You completed Space Cowboy.<br/><br/>
-    You saved ${Player.player.cows} cows.<br/>
+    You saved ${Player.player.cows} cow${Player.player.cows <= 1 ? '' : 's'}.<br/>
 
     Game made with love by:<br/><br/>
     Adrian Lissot<br/>
@@ -113,7 +115,7 @@ export function showStartScreen() {
         removeEventListener("keyup", listener);
     }
     addEventListener("keyup", listener);
-    getElementById("ui-text")!.innerHTML = "Press SPACE to start Space Cowboy.";
+    getElementById("ui-text")!.innerHTML = "Press SPACE to start Space Cowboy.<br/><br/>Save the cows! Or rush to the end. Picking up a cow grants you a checkpoint.";
     getElementById("ui")!.style.display = "block";
 }
 

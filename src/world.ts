@@ -29,8 +29,8 @@ export function load() {
             const y = floor(i / worldWidth);
             if (isTile(data.id)) {
                 const adjacentTiles = getAdjacentTiles(i, dataArray, worldWidth, worldHeight);
-                const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile) || data.id == Id.spikes;
-                const offset = data.id == Id.spikes ? 8 : 0;
+                const collision = (data.id == Id.floor_tile || data.id == Id.intern_floor_tile) && adjacentTiles.some(tile => tile.id == Id.bg_tile || tile.id == Id.bg_tile8) || data.id == Id.spikes;
+                const offset = data.id == Id.spikes ? 8 : data.id == Id.charac_cow_dashframe || data.id == Id.charac_cow ? 4 : 0;
                 const tile: Tile = {
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize + offset,
@@ -72,7 +72,7 @@ export function load() {
                     y: y * Settings.tileSize,
                     w: Settings.tileSize,
                     h: Settings.tileSize,
-                    hFlip: false,
+                    hFlip: true,
                     speed: zero(),
                     state: EnemyState.Idle,
                     id: data.id,
@@ -80,8 +80,8 @@ export function load() {
                     sprite: { ...enemyHumanIdleSprite },
                     colorized: true
                 };
-                enemy.patrol = createPatrol(enemy, min * Settings.tileSize, max * Settings.tileSize);
-                enemies.push(enemy)
+                enemy.patrol = min != max ? createPatrol(enemy, min * Settings.tileSize, max * Settings.tileSize) : (delta) => {};
+                enemies.push(enemy);
             }
             if (isCow(data.id)) {
                 cows.push({

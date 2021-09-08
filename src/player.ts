@@ -1,6 +1,6 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { draw, drawRectOutline, Sprite } from "./renderer";
+import { draw, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
@@ -9,9 +9,12 @@ import { shut, track } from "./camera";
 import { Tile } from "./tile";
 import { attackHit, DynamicTile } from "./dynamicTile";
 import { Id } from "../gen/id";
-import { abs, ceil, floor, getElementById, round } from "./alias";
+import { abs } from "./alias";
 import { gg, notGg } from "./ui";
 import { lava } from "./lava";
+import { getCollision } from "./physics";
+import { play_escape, stop_song } from "./sounds";
+import { Cow } from "./cow";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -36,15 +39,15 @@ export const PlayerCombatState = {
     Cow: 1
 }
 
-const humanIdleSprite = {
+export const humanIdleSprite = {
     x: 4 * Settings.tileSize,
     y: 1 * Settings.tileSize
 };
 const humanWalkSprite = {
-    x: 0 * Settings.tileSize,
-    y: 2 * Settings.tileSize
+    x: 5 * Settings.tileSize,
+    y: 1 * Settings.tileSize
 };
-const cowIdleSprite = {
+export const cowIdleSprite = {
     x: 0 * Settings.tileSize,
     y: 1 * Settings.tileSize
 };
@@ -52,7 +55,7 @@ const cowWalkSprite = {
     x: 3 * Settings.tileSize,
     y: 1 * Settings.tileSize
 };
-const cowDashSprite = {
+export const cowDashSprite = {
     x: 1 * Settings.tileSize,
     y: 1 * Settings.tileSize,
     w: 2 * Settings.tileSize
@@ -80,6 +83,13 @@ const jumpKeyPress = createReleasedKeyPress("up");
 const trails: Player[] = [];
 let animation = createLinear(1, 0, 50);
 let snapTo: Tile | null = null;
+let leftTutorialZone = false;
+const tutorialZone = {
+    x: 76 * Settings.tileSize,
+    y: 86 * Settings.tileSize,
+    w: 17 * Settings.tileSize,
+    h: 3 * Settings.tileSize
+};
 
 export const player: Player = {
     x: Settings.playerSpawnX,
@@ -191,11 +201,16 @@ export function update(delta: number) {
 
     track(player);
 
-    if (abs(player.x - Settings.endX) < Settings.tileSize / 2
-        && abs(player.y - Settings.endY) < Settings.tileSize / 2) {
+    if (abs(player.x - Settings.endX) < Settings.tileSize / 2) {
         gg();
     }
     if (player.y > lava.y) notGg();
+
+    if (!leftTutorialZone && getCollision(player, tutorialZone) == null) {
+        stop_song();
+        play_escape();
+        leftTutorialZone = true;
+    }
 }
 
 export function playerCollide(translationVector: Vector, tile: Tile) {
@@ -233,7 +248,10 @@ export function resurrect() {
     player.state = PlayerState.Airborne;
 }
 
-export function collect() { player.cows++; }
+export function collect(cow: Cow) {
+    currentSpawn = { x: cow.x, y: cow.y };
+    player.cows++;
+}
 
 export function playerSnap(tile: DynamicTile | null, translationVector: Vector) {
     if (tile != null && tile.speed.y > 0 && translationVector.y < 0) snapTo = tile;

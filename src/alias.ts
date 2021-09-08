@@ -1,6 +1,6 @@
-export function sign(value: number): number {
+export function sign(value: number, defaultIfZero = 1): number {
     const sign = Math.sign(value);
-    return sign == 0 ? 1 : sign;
+    return sign == 0 ? defaultIfZero : sign;
 }
 
 export function round(value: number) { return Math.round(value); }

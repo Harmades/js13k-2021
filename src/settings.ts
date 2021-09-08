@@ -36,7 +36,7 @@ export const Settings = {
     bulletLifetime: 1000,
 
     epsilon: 0.1,
-    endX: 183 * 16,
+    endX: 175 * 16,
     endY: 11 * 16,
 
     lavaSpeedY: 10,

@@ -11,8 +11,8 @@ export type Cow = Rectangle & {
 };
 
 export const cowSprite = {
-    x: 5 * Settings.tileSize,
-    y: 1 * Settings.tileSize,
+    x: 4 * Settings.tileSize,
+    y: 4 * Settings.tileSize,
     w: Settings.tileSize,
     h: Settings.tileSize
 };

@@ -8,7 +8,7 @@ export type Bullet = Rectangle & { currentLifetime: number, alongVector: Vector 
 export let bullets: Bullet[] = [];
 
 const sprite = {
-    x: 4 * Settings.tileSize + 4,
+    x: 5 * Settings.tileSize + 4,
     y: 0 * Settings.tileSize + 5,
     w: 8,
     h: 6

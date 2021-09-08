@@ -9,7 +9,12 @@ export const lava = {
 };
 
 const sprite = {
-    x: 3 * Settings.tileSize,
+    x: 0 * Settings.tileSize,
+    y: 4 * Settings.tileSize
+};
+
+const spriteTop = {
+    x: 1 * Settings.tileSize,
     y: 4 * Settings.tileSize
 };
 
@@ -18,5 +23,6 @@ export function update(delta: number) {
 }
 
 export function render() {
-    drawPattern(sprite, lava);
+    drawPattern(spriteTop, { ...lava, h: Settings.tileSize });
+    drawPattern(sprite, { ...lava, y: lava.y + Settings.tileSize });
 }
