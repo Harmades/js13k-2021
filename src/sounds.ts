@@ -114,4 +114,38 @@ export function stop_song() {
   audio_node.stop();
 }
 
+export function effect_enemy_death() {
+	zzfx(...[.3,u,304,.1,.3,u,5,.1,-46,u,u,u,u,u,-165]);
+	zzfx(...[.3,u,418,0,.02,.2,4,1.15,-8.5,u,u,u,u,.7,u,.1]);
+}
+
+export function effect_jump() {
+  zzfx(...[0.3,,390,.05,.1,,1,1.7,2,,,,,,,,,.9]);
+}
+
+export function effect_shoot() {
+  zzfx(...[0.1,,155,.02,.03,.07,4,1.2,-0.7,,,,,,,,,.88]);
+}
+
+export function effect_dash() {
+  zzfx(...[0.5,,810,.04,.25,.2,3,.3,.5,.3,,,.2,.3,2.7,.3,,.6,.07,.4]);
+}
+
+export function effect_death() {
+  zzfx(...[0.3,0,146.8324,.3,,.9,,,-12,.3,,,.4,4.1,1,.5,,.4,.99,.1]);
+}
+
+export function effect_mow() {
+  zzfx(...[0.2,0,200,.3,,.15,1,0,.1,,,,,,,,.05,.2,,.2]);
+  zzfx(...[0.5,0,200,.6,.1,.2,1,0,-0.1,,,,,,,,.01,,,.16]);
+}
+
+export function effect_transform() {
+  zzfx(...[.1,,471,,.05,.4,4,,-7,,,,,1,60,,,.8,.05,.2]);
+}
+
+export function effect_game_over() {
+  zzfx(...[,0,960,1,2,,,,-0.5,,-200,.2,,.3,,,1,,1]);
+}
+
 
