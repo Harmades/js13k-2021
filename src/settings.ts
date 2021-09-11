@@ -20,12 +20,13 @@ export const Settings = {
     playerSpeedX: 75,
     playerSpeedY: 250,
     playerDashSpeedX: 150,
-    playerDashFrames: 300,
+    playerDashAnimationFrames: 300,
+    playerDashFrames: 400,
     playerCoyoteFrames: 250,
     playerWalkCycleFrames: 5,
     playerBulletSpawnOffsetX: 16,
     playerBulletSpawnOffsetY: 6,
-    playerCollisionGrid: 16 * 10,
+    playerCollisionGrid: 7 * 16,
 
     enemySpeedX: 40,
     enemyWalkCycleFrames: 6,
@@ -40,5 +41,5 @@ export const Settings = {
     endY: 11 * 16,
 
     lavaSpeedY: 10,
-    timer: 5 * 60
+    timer: 8 * 60
 }

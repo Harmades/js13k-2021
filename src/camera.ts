@@ -11,8 +11,8 @@ export type Camera = Rectangle & {
 }
 
 export const camera: Camera = {
-    x: 60,
-    y: 0,
+    x: Settings.playerSpawnX - 32,
+    y: Settings.playerSpawnY - 80,
     w: Settings.cameraWidth,
     h: Settings.cameraHeight,
     ox: 0,

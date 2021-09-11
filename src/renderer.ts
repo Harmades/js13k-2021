@@ -8,17 +8,17 @@ import * as Background from "./background";
 import * as Camera from "./camera";
 import * as Cow from "./cow";
 import * as Ui from "./ui";
-import * as Light from "./light";
 import * as MovingTile from "./dynamicTile";
 import * as Lava from "./lava";
 import { Vector } from "./vector";
 import Atlas from "../asset/atlas.png";
-import { createElement, floor, getElementById, PI, round, sign } from "./alias";
+import { createElement, getElementById, PI, round, sign } from "./alias";
 
 export type Sprite = {
     x: number;
     y: number;
     w?: number;
+    ow?: number;
     h?: number;
     hFlip?: boolean;
     vFlip?: boolean;
@@ -71,13 +71,13 @@ function loadImage(path: string): HTMLImageElement {
     return image;
 }
 
-export function draw({ x, y, w = Settings.tileSize, h = Settings.tileSize, hFlip: hFlip = false, vFlip = false, dFlip = false, alpha = 1 }: Sprite, vector: Vector) {
+export function draw({ x, y, w = Settings.tileSize, ow = 0, h = Settings.tileSize, hFlip: hFlip = false, vFlip = false, dFlip = false, alpha = 1 }: Sprite, vector: Vector) {
     if (!atlas.complete) return;
     destinationContext.save();
     destinationContext.globalAlpha = alpha;
     destinationContext.translate(round(vector.x), round(vector.y));
     if (hFlip) {
-        destinationContext.translate(Settings.tileSize, 0);
+        destinationContext.translate(Settings.tileSize + ow, 0);
         destinationContext.scale(-1, 1);
     }
     if (vFlip) {
@@ -101,22 +101,6 @@ export function draw({ x, y, w = Settings.tileSize, h = Settings.tileSize, hFlip
     destinationContext.restore();
 }
 
-export function drawGradientCircle({ x, y, color, radius, alpha, angle }: Light.Light) {
-    destinationContext.save();
-    destinationContext.globalAlpha = alpha;
-    destinationContext.globalCompositeOperation = "lighter";
-    const gradient = destinationContext.createRadialGradient(x, y, 1, x, y, radius);
-    gradient.addColorStop(0, color);
-    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-    destinationContext.beginPath();
-    destinationContext.moveTo(x, y);
-    destinationContext.closePath();
-    destinationContext.arc(x, y, radius, 0, angle, sign(angle) == -1);
-    destinationContext.fillStyle = gradient;
-    destinationContext.fill();
-    destinationContext.restore();
-}
-
 export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Rectangle) {
     if (!atlas.complete) return;
     offscreenContext.drawImage(atlas, sx, sy, Settings.tileSize, Settings.tileSize, 0, 0, Settings.tileSize, Settings.tileSize);
@@ -129,9 +113,9 @@ export function drawPattern({ x: sx, y: sy }: Sprite, { x: dx, y: dy, w, h }: Re
     destinationContext.restore();
 }
 
-export function drawText(text: string, size: number, { x, y }: Vector) {
+export function drawText(text: string, size: number, { x, y }: Vector, color = "#FFFFEB") {
     cameraContext.font = `${size}px sans-serif`;
-    cameraContext.fillStyle = "#FFFFEB";
+    cameraContext.fillStyle = color;
     cameraContext.fillText(text, x, y);
 }
 
@@ -160,7 +144,6 @@ export function render() {
     Enemy.render();
     Player.render();
     Cow.render();
-    Light.render();
     MovingTile.render();
     Lava.render();
     sourceContext = playerContext;
@@ -176,11 +159,7 @@ export function staticRender() {
     sourceContext = atlasContext;
     Background.render();
     destinationContext = staticContext;
-    // destinationContext.shadowOffsetX = 2;
-    // destinationContext.shadowOffsetY = 2;
-    // destinationContext.shadowColor = "rgba(0, 0, 0, 0.5)";
     Tile.render();
-    Light.render();
 }
 
 function atlasRender() {

@@ -7,11 +7,6 @@ const emptySprite = {
     y: 4 * Settings.tileSize
 };
 
-const stars1Sprite = {
-    x: 1 * Settings.tileSize,
-    y: 5 * Settings.tileSize
-};
-
 const stars2Sprite = {
     x: 2 * Settings.tileSize,
     y: 5 * Settings.tileSize

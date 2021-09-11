@@ -5,9 +5,10 @@ import { Settings } from "./settings";
 import { cows, cowSprite } from "./cow";
 import { getCenter } from "./rectangle";
 import { abs, floor, getElementById } from "./alias";
-import { currentTime } from "./timer";
+import { currentTime, timerHalfway } from "./timer";
 import * as Game from "./game";
 import { play_cowboy, stop_song } from "./sounds";
+import { lava, lavaSpriteTop } from "./lava";
 
 const uiFrame = {
     x: (Settings.cameraWidth - Settings.uiWidth) / 2,
@@ -24,7 +25,11 @@ const scorePosition = {
 const timerPosition = {
     x: 15 + cowSprite.w / 2,
     y: 20 + cowSprite.h / 2
-}
+};
+const lavaPosition = {
+    x: 15 + cowSprite.w / 2 + Settings.tileSize,
+    y: 120 + cowSprite.h / 2 + Settings.tileSize
+};
 const sprite = {
     x: cowSprite.x + 5,
     y: cowSprite.y + 5,
@@ -40,6 +45,8 @@ const end = {
     collected: false,
     dead: false
 };
+const white = "#FFFFEB";
+const red = "#EB564B";
 
 export function update(delta: number) {
 
@@ -48,7 +55,9 @@ export function update(delta: number) {
 export function render() {
     draw(cowSprite, { x: scorePosition.x - cowSprite.w, y: scorePosition.y - cowSprite.h });
     drawText(` x ${Player.player.cows}`, 12, scorePosition);
-    drawText(`${floor(currentTime / 60)}:${(currentTime % 60 < 10 ? 0 : '')}${floor(currentTime % 60)}`, 12, timerPosition);
+    drawText(`${floor(currentTime / 60)}:${(currentTime % 60 < 10 ? 0 : '')}${floor(currentTime % 60)}`, 12, timerPosition, timerHalfway ? red : white);
+    draw(lavaSpriteTop, { x: lavaPosition.x - Settings.tileSize, y: lavaPosition.y - Settings.tileSize});
+    drawText(` ${floor((lava.y - Player.player.y) / Settings.tileSize)}m`, 12, lavaPosition);
     drawRectOutline(uiFrame);
 
     for (const target of [...cows, end]) {
@@ -90,9 +99,11 @@ export function gg() {
     stop_song();
     play_cowboy();
     getElementById("ui")!.style.display = "block";
+    const playerCows = Player.player.cows;
+    const remainingCows = cows.length - playerCows;
     getElementById("ui-text")!.innerHTML = `
     Congratulations! You completed Space Cowboy.<br/><br/>
-    You saved ${Player.player.cows} cow${Player.player.cows <= 1 ? '' : 's'}.<br/>
+    You saved ${playerCows} ${pluralize(playerCows)} and left ${remainingCows} ${pluralize(remainingCows)} to die in the lava.<br/>
 
     Game made with love by:<br/><br/>
     Adrian Lissot<br/>
@@ -101,21 +112,28 @@ export function gg() {
     `;
 }
 
+function pluralize(length: number) {
+    return `cow${length == 1 ? '' : 's'}`;
+}
+
 export function notGg() {
     Game.stop();
-    getElementById("ui-text")!.innerHTML = "You died in lava.<br/><br/>Miserably.<br/><br/>Press F5 to restart the game.";
+    getElementById("ui-text")!.innerHTML = "You died in lava.<br/><br/>Miserably.<br/><br/>Reload page to restart the game.";
     getElementById("ui")!.style.display = "block";
 }
 
 export function showStartScreen() {
-    const listener = () => {
+    const listener = (e: KeyboardEvent) => {
+        if (e.keyCode != 32) return;
         hideUiScreen();
         play_cowboy();
+        Camera.track(Player.player);
+        Game.render();
         Game.start();
         removeEventListener("keyup", listener);
     }
     addEventListener("keyup", listener);
-    getElementById("ui-text")!.innerHTML = "Press SPACE to start Space Cowboy.<br/><br/>Save the cows! Or rush to the end. Picking up a cow grants you a checkpoint.";
+    getElementById("ui-text")!.innerHTML = "Save the cows! Or rush to the end 🚩.<br/><br/>WASD/Arrows: move&jump<br/>SHIFT: morph to cow/human form<br/>SPACEBAR: charge(cow)/shoot(human)<br/><br/>SHOOT butchers with KNIVES, CHARGE butchers with SHIELDS as shown below.<br/><br/>Picking up a cow grants you a CHECKPOINT. Be careful, LAVA is rising!<br/><br/>Press SPACE to start Space Cowboy.";
     getElementById("ui")!.style.display = "block";
 }
 

@@ -70,7 +70,7 @@ export function load() {
                 const enemy: Enemy = {
                     x: x * Settings.tileSize,
                     y: y * Settings.tileSize,
-                    w: Settings.tileSize,
+                    w: Settings.tileSize - 2,
                     h: Settings.tileSize,
                     hFlip: true,
                     speed: zero(),

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { Settings } from './settings';
 
 let zzfx, zzfxP, zzfxG, zzfxM, zzfxV, zzfxR, zzfxX
 let u = undefined;
@@ -30,61 +29,6 @@ zzfxX=new(top.AudioContext||webkitAudioContext);
 
 zzfxM=(n,f,t,e=125)=>{let l,o,z,r,g,h,x,a,u,c,d,i,m,p,G,M=0,R=[],b=[],j=[],k=0,q=0,s=1,v={},w=zzfxR/e*60>>2;for(;s;k++)R=[s=a=d=m=0],t.map((e,d)=>{for(x=f[e][k]||[0,0,0],s|=!!f[e][k],G=m+(f[e][0].length-2-!a)*w,p=d==t.length-1,o=2,r=m;o<x.length+p;a=++o){for(g=x[o],u=o==x.length+p-1&&p||c!=(x[0]||0)|g|0,z=0;z<w&&a;z++>w-99&&u?i+=(i<1)/99:0)h=(1-i)*R[M++]/2||0,b[r]=(b[r]||0)-h*q+h,j[r]=(j[r++]||0)+h*q+h;g&&(i=g%1,q=x[1]||0,(g|=0)&&(R=v[[c=x[M=0]||0,g]]=v[[c,g]]||(l=[...n[c]],l[2]*=2**((g-12)/12),g>0?zzfxG(...l):[])))}m=G});return[b,j]}
 
-/*
-class SoundEffects {
-  coin() {
-
-	zzfx(...[.6,u,1300,u,.05,.5,1,2,u,u,1300,.07,u,u,.1,u,u,.9]);
-  }
-
-
-  impact(speed) {
-	const norm_speed = ((speed > Settings.maxSpeed ? Settings.maxSpeed : speed) - Settings.minImpactSoundSpeed)/(Settings.maxSpeed - Settings.minImpactSoundSpeed);
-	const volume = norm_speed*(Settings.maxSoundImpactVolume - Settings.minSoundImpactVolume) + Settings.minSoundImpactVolume;
-
-	zzfx(...[volume,u,200,u,u,u,u,5,u,-0.1,600,.3,u,8,u,u,u,.9,.1,.01]);
-  }
-
-  impact_tree() {
-
-	zzfx(...[.5,u,304,.1,.3,u,5,.1,-46,u,u,u,u,u,-165]);
-  }
-
-  impact_foe() {
-
-	zzfx(...[u,u,420,u,.02,.2,4,1.05,-9,u,2e3,.5,u,u,u,.5]);
-  }
-
-  impact_boss() {
-
-	zzfx(...[.5,u,304,.1,.3,u,5,.1,-46,u,u,u,u,u,-165]);
-
-	zzfx(...[u,u,418,0,.02,.2,4,1.15,-8.5,u,u,u,u,.7,u,.1]);
-  }
-
-  impact_bumper() {
-
-	zzfx(...[u,u,224,.02,.02,.08,1,1.7,-13.9,u,u,u,u,u,6.7]);
-  }
-
-  impact_iron() {
-
-	zzfx(...[.4,u,941,u,u,.4,4,.74,-222,u,u,u,u,.8,u,1]);
-  }
-
-  launcher() {
-
-	zzfx(...[.7,u,1e3,u,.1,.8,u,u,u,u,100,.01,.03]);
-  }
-
-  paddle() {
-
-	zzfx(...[.2,u,537,.02,.02,.22,1,1.59,-6.98,4.97]);
-
-	zzfx(...[.5,u,150,.05,u,.05,u,1.3,u,u,u,u,u,3]);
-  }
-}
-*/
 
 const cowboy = [[[.5,0,196,.05,.5,.6,1],[.8,u,24.5,.2,.3,.7,u,.5,u,u,5,u,.1,u,u,u,u,.8,u,.2],[2,0,196,.02,.1,.4,1],[,0,49,u,u,.2,3,5]],[[[,-1,6,u,u,u,u,u,u,u,8,u,u,u,u,u,u,u,10,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,1,10,u,u,u,u,u,u,u,12,u,u,u,u,u,u,u,17,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,u,3,u,u,u,u,u,u,u,5,u,u,u,u,u,u,u,6,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[2,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,15,15,u,13,u,10,u]],[[,-1,6,u,u,u,u,u,u,u,8,u,u,u,u,u,u,u,10,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,1,10,u,u,u,u,u,u,u,12,u,u,u,u,u,u,u,17,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,u,3,u,u,u,u,u,u,u,5,u,u,u,u,u,u,u,6,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[2,u,8,u,u,u,u,u,u,u,3,u,3,u,10,u,u,u,8,u,6,u,u,u,u,u,u,15,15,u,13,u,10,u],[3,u,8,u,u,u,8,u,10,u,u,u,u,u,u,u,u,u,u,u,u,u,1,u,3,u,u,15,15,u,13,u,10,u]],[[,-1,6,u,u,u,u,u,u,u,8,u,u,u,u,u,u,u,10,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,1,10,u,u,u,u,u,u,u,12,u,u,u,u,u,u,u,17,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[,u,3,u,u,u,u,u,u,u,5,u,u,u,u,u,u,u,6,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u],[2,u,8,u,u,u,u,u,u,u,3,u,3,u,10,u,u,u,8,u,6,u,u,u,u,u,u,15,15,u,13,u,10,u],[3,u,8,u,u,u,8,u,10,u,u,u,1,3,u,u,8,u,1,3,u,u,1,u,3,u,u,15,15,u,13,u,10,u]]],[0,1,2,1,2],110,u];
 

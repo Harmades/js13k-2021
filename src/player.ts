@@ -1,6 +1,6 @@
 import { createReleasedKeyPress, input } from "./input";
 import { Rectangle } from "./rectangle";
-import { draw, Sprite } from "./renderer";
+import { draw, drawRect, drawRectOutline, Sprite } from "./renderer";
 import { Settings } from "./settings";
 import { Vector, zero } from "./vector";
 import { spawn } from "./bullet";
@@ -15,6 +15,7 @@ import { lava } from "./lava";
 import { getCollision } from "./physics";
 import { Cow } from "./cow";
 import * as Songs from "./sounds"
+import { startTimer } from "./timer";
 
 export type Player = Rectangle & {
     speed: Vector;
@@ -58,7 +59,8 @@ const cowWalkSprite = {
 export const cowDashSprite = {
     x: 1 * Settings.tileSize,
     y: 1 * Settings.tileSize,
-    w: 2 * Settings.tileSize
+    w: 2 * Settings.tileSize,
+    ow: 5
 };
 const humanHitbox = {
     w: 14,
@@ -70,12 +72,14 @@ const cowHitbox = {
     h: 12,
     y: 4
 };
+const cowHitboxDashX = 4;
 
 let currentGravity = 0;
 let dashExhausted = false;
-let currentSpawn = { x: Settings.playerSpawnX, y: Settings.playerSpawnY };
+let currentSpawn: Vector | null = null;
 const coyoteCounter = createCounter(Settings.playerCoyoteFrames);
 const walkCounter = createCounter(Settings.playerWalkCycleFrames);
+const dashAnimationCounter = createCounter(Settings.playerDashAnimationFrames);
 const dashCounter = createCounter(Settings.playerDashFrames);
 const morphKeyPress = createReleasedKeyPress("shift");
 const spaceKeyPress = createReleasedKeyPress("space");
@@ -115,13 +119,9 @@ export function render() {
     if (player.state == PlayerState.Idle || player.state == PlayerState.Airborne || player.state == PlayerState.Coyote) {
         player.sprite = idleSprite;
     }
-    if (player.state == PlayerState.Dash) {
-        player.sprite = cowDashSprite;
-    }
     if (player.state == PlayerState.Dead) {
         player.sprite.h = animation() * Settings.tileSize;
     }
-    if (player.speed.x != 0) player.hFlip = player.speed.x < 0;
     if (trails.length == 5) trails.shift();
     trails.filter(trail => trail.state == PlayerState.Airborne && player.speed.y < 0 || trail.state == PlayerState.Dash)
         .map((trail, i) => draw({ ...trail, ...trail.sprite, alpha: i / (trails.length - 1) }, trail));
@@ -146,9 +146,19 @@ export function update(delta: number) {
         player.state = PlayerState.Running;
         dashExhausted = false;
     }
-    if (player.state == PlayerState.Dash && dashCounter()) {
-        player.state = PlayerState.Airborne;
-        dashExhausted = true;
+    if (player.state == PlayerState.Dash) {
+        if (dashCounter()) {
+            player.state = PlayerState.Airborne;
+        } else {
+            if (dashExhausted || dashAnimationCounter()) {
+                player.sprite = cowIdleSprite;
+                dashExhausted = true;
+                player.w = cowHitbox.w;
+            }
+            if (!dashExhausted) {
+                player.sprite = cowDashSprite;
+            }
+        }
     }
 
     if (snapTo != null) {
@@ -159,7 +169,7 @@ export function update(delta: number) {
     if (jumpKeyPress() && player.state != PlayerState.Airborne) {
         player.speed.y = -Settings.playerSpeedY;
         snapTo = null;
-	    Songs.effect_jump();
+        Songs.effect_jump();
     } else {
         player.speed.y += currentGravity * delta;
     }
@@ -170,19 +180,21 @@ export function update(delta: number) {
     } else {
         player.speed.y = 0;
     }
+    if (player.speed.x != 0) player.hFlip = player.speed.x < 0;
 
     if (player.combatState == PlayerCombatState.Human && spaceKeyPress()) {
         const xOffset = player.hFlip ? -8 : Settings.playerBulletSpawnOffsetX;
         spawn({ x: player.x + xOffset, y: player.y + Settings.playerBulletSpawnOffsetY }, { x: player.hFlip ? -1 : 1, y: 0 });
         Songs.effect_shoot();
     }
-    if (player.combatState == PlayerCombatState.Cow && spaceKeyPress() && !dashExhausted) {
+    if (player.state != PlayerState.Dash && player.combatState == PlayerCombatState.Cow && spaceKeyPress() && !dashExhausted) {
         player.speed.x = player.hFlip ? -Settings.playerDashSpeedX : Settings.playerDashSpeedX;
+        player.w += cowHitboxDashX;
         player.state = PlayerState.Dash;
-   	    Songs.effect_dash();
+        Songs.effect_dash();
     }
     if (morphKeyPress()) {
-	    Songs.effect_transform();
+        Songs.effect_transform();
         if (player.combatState == PlayerCombatState.Human) {
             player.combatState = PlayerCombatState.Cow;
             player.sprite = cowIdleSprite;
@@ -208,17 +220,21 @@ export function update(delta: number) {
     if (abs(player.x - Settings.endX) < Settings.tileSize / 2) {
         gg();
     }
-    if (player.y > lava.y) {
-	    Songs.stop_song();
+    if (player.y + player.h / 2 > lava.y) {
+        Songs.stop_song();
         Songs.effect_game_over();
-	    Songs.play_cowboy();
-	    notGg();
+        Songs.play_cowboy();
+        notGg();
     }
 
     if (!leftTutorialZone && getCollision(player, tutorialZone) == null) {
-        Songs.stop_song();
-        Songs.play_escape();
         leftTutorialZone = true;
+        startTimer();
+    }
+
+    // Do not respawn in tutorial zone
+    if (currentSpawn == null && player.y <= 79 * Settings.tileSize) {
+        currentSpawn = { x: 106 * Settings.tileSize, y: 77 * Settings.tileSize };
     }
 }
 
@@ -248,8 +264,8 @@ export function playerDie() {
 }
 
 export function respawn() {
-    player.x = currentSpawn.x;
-    player.y = currentSpawn.y;
+    player.x = currentSpawn != null ? currentSpawn.x : Settings.playerSpawnX;
+    player.y = currentSpawn != null ? currentSpawn.y : Settings.playerSpawnY;
     animation = createLinear(0, 1, 50);
 }
 
