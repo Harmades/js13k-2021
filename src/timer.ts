@@ -7,7 +7,7 @@ export let timerHalfway = false;
 
 export function update(delta: number) {
     if (!running) return;
-    if (!timerHalfway && currentTime <= Settings.timer / 2) {
+    if (!timerHalfway && currentTime <= Settings.timerEscape) {
         timerHalfway = true;
         stop_song();
         play_escape();
